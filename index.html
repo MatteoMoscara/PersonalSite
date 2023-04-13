@@ -84,11 +84,6 @@
                     <div class="typed-text d-none">Web Designer, Web Developer, Front End Developer, Graphic designer</div>
                     <div class="d-flex align-items-center pt-5">
                         <a href="curriculum/Curriculum Vitae Moscara Matteo 2022_web.pdf" class="btn btn-primary py-3 px-4 me-5">Scarica CV</a>
-                        <!-- <button type="button" class="btn-play" data-bs-toggle="modal"
-                            data-src="https://www.youtube.com/embed/DWRcNpR6Kdc" data-bs-target="#videoModal">
-                            <span></span>
-                        </button>
-                        <h5 class="ms-4 mb-0 d-none d-sm-block">Play Video</h5> -->
                     </div>
                 </div>
                 <div class="col-lg-6 d-flex">
@@ -98,26 +93,6 @@
         </div>
     </div>
     <!-- Header End -->
-
-
-    <!-- Video Modal Start -->
-    <!-- <div class="modal modal-video fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-0">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel">Youtube Video</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="ratio ratio-16x9">
-                        <iframe class="embed-responsive-item" src="" id="video" allowfullscreen allowscriptaccess="always"
-                            allow="autoplay"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Video Modal End -->
 
 
     <!-- About Start -->
@@ -804,7 +779,7 @@
                     <h3 class="fw-bold"><a href="tel:+393896868174">+39 389 6868174</a></h3>
                     <hr class="w-100">
                     <p class="mb-2">Inviami una mail:</p>
-                    <h3 class="fw-bold"><a href="mailto:">info@example.com</a></h3>
+                    <h3 class="fw-bold"><a href="mailto:">info@matteomoscara.it</a></h3>
                     <hr class="w-100">
                     <p class="mb-2">Seguimi:</p>
                     <div class="d-flex pt-2">
@@ -812,35 +787,35 @@
                     </div>
                 </div>
                 <div class="col-lg-7 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
-                    <form>
+                    <p class="mb-4">Contattami! Sarai ricontattato a breve.</p>
+                    <form method="POST" id="myForm" action="sendmail.php">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" placeholder="Il tuo nome">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Il tuo nome">
                                     <label for="name">Il tuo nome</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="La tua Email">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="La tua Email">
                                     <label for="email">La tua Email</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="subject" placeholder="Oggetto">
+                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Oggetto">
                                     <label for="subject">Oggetto</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control" placeholder="Lascia il messaggio qui" id="message" style="height: 100px"></textarea>
+                                    <textarea class="form-control" placeholder="Lascia il messaggio qui" id="message" name="message" style="height: 100px"></textarea>
                                     <label for="message">Messaggio</label>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary py-3 px-5" type="submit">Invia messaggio</button>
+                                <button class="btn btn-primary py-3 px-5" type="submit" name="send" id="submitButton">Invia messaggio</button>
                             </div>
                         </div>
                     </form>
@@ -929,6 +904,26 @@
             document.getElementById("autoclick").click();
         }, 10);
         
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#myForm").on('submit', function(event) {
+                event.preventDefault(); 
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'sendmail.php',
+                    dataType: "json",
+                    data: formData,
+                    success: function(response) { 
+                        alert(response.success); 
+                    },
+                    error: function(xhr, status, error){
+                        console.log(xhr); 
+                    }
+                });
+            });
+        });
     </script>
 
     <!-- Template Javascript -->
