@@ -274,7 +274,16 @@
 
 .portfolio-img {
     position: relative;
+    
 }
+
+/* modificato */
+.portfolio-img img{
+    height: 296px;
+    object-fit: cover!important;
+    min-width: 100%;
+}
+/*fine modifica */
 
 .portfolio-btn {
     position: absolute;
