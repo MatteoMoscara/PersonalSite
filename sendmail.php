@@ -32,7 +32,8 @@ $headers .= "Reply-To: $email\r\n";
 // Send email
 mail($to, $subject, $body, $headers);
 
-// // Redirect to thank you page
-// header("Location: thankyou.html"); // Replace with your thank you page URL
+// Redirect to thank you page
+// header("Location: index.html"); // Replace with your thank you page URL
 
 ?>
+<p>mail inviata</p>
