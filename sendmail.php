@@ -1,6 +1,6 @@
 <?php
 if(isset($_POST['message'])){
-    $to      = 'matteomos1999@gmail.com';
+    $to      = 'info@matteomoscara.it';
     $subject = $_POST['subject']; 
     $message = $_POST['message']; 
     $headers = "Da: ".$_POST['name']." <".$_POST['email'].">\r\n"; $headers = "Reply-To: ".$_POST['email']."\r\n"; 
