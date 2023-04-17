@@ -792,7 +792,7 @@
                     <h1 class="display-5 mb-0">Lavoriamo insieme!</h1>
                 </div>
                 <div class="col-lg-6 text-lg-end">
-                    <button class="btn btn-primary py-3 px-5" onclick="showText()">Dì Ciao</button>
+                    <button class="btn btn-primary py-3 px-5" onclick="showText2()">Dì Ciao</button>
                     <p class="d-none h3 mt-3 text-primary" id="demoT2">Ciao!</p>
                 </div>
             </div>
@@ -891,22 +891,28 @@
             document.getElementById("demoT").classList.add('d-block');
             setTimeout(function() {
             document.getElementById("demoT").classList.remove('d-primary');
+            document.getElementById("demoT").classList.remove('h3');
             document.getElementById("demoT").classList.add('text-warning');
-            }, 1500);
+            document.getElementById("demoT").classList.add('h2');
+            }, 2000);
             setTimeout(function() {
             document.getElementById("demoT").classList.remove('text-warning');
             document.getElementById("demoT").classList.add('text-danger');
-            }, 3000);
+            document.getElementById("demoT").classList.add('h1');
+            document.getElementById("demoT").classList.remove('h2');
+            }, 4000);
             setTimeout(function() {
             document.getElementById("demoT").classList.remove('text-warning');
             document.getElementById("demoT").classList.remove('text-danger');
+            document.getElementById("demoT").classList.remove('h1');
             document.getElementById("demoT").classList.remove('d-block');
             document.getElementById("demoT").classList.add('d-none');
             document.getElementById("demoT").classList.add('text-primary');
-            }, 4500);
+            document.getElementById("demoT").classList.add('h3');
+            }, 6000);
         }
 
-        function showText() {
+        function showText2() {
             document.getElementById("demoT2").classList.remove('d-none');
             document.getElementById("demoT2").classList.add('d-block');
             setTimeout(function() {
