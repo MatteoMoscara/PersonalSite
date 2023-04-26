@@ -23,7 +23,7 @@ $body = "Name: $name\n" .
         "Message:\n$message";
 
 // Set recipient email address
-$to = "info@matteomoscara.it"; // Replace with your recipient email address
+$to = "matteomos1999@gmail.com"; // Replace with your recipient email address
 
 // Set email headers
 $headers = "From: $email\r\n";
