@@ -1,4 +1,5 @@
 <?php
+        echo "Grazie per avermi contattato";
 // if(isset($_POST['message'])){
 //     $to      = 'info@matteomoscara.it';
 //     $subject = $_POST['subject']; 
