@@ -33,7 +33,7 @@ $headers .= "Reply-To: $email\r\n";
 mail($to, $subject, $body, $headers);
 
 // Redirect to thank you page
-header("Location: index.html"); // Replace with your thank you page URL
+header("Location: https://matteomoscara.it"); // Replace with your thank you page URL
 
 ?>
 <p>mail inviata</p>
