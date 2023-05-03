@@ -5,7 +5,17 @@
     --light: #FAFAFB;
     --dark: #12141D;
 }
+/* Modifica selection */
+::selection {
+    background-color: var(--primary);
+    color: #FFFFFF;
+}
 
+button::selection, a::selection {
+    background-color: var(--secondary);
+    color: #FFFFFF;
+}
+/* FIne modifica selection  */
 .back-to-top {
     position: fixed;
     display: none;
