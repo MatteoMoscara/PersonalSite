@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /privacy-policy.html
+
+Sitemap: https://matteomoscara.it/sitemap.xml 
