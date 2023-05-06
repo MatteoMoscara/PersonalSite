@@ -859,7 +859,7 @@
                     <h3 class="fw-bold"><a href="tel:+393896868174">+39 389 6868174</a></h3>
                     <hr class="w-100">
                     <p class="mb-2">Inviami una mail:</p>
-                    <h3 class="fw-bold"><a href="mailto:info@matteomoscara.it?subject=Ho%20visto%20il%20sito%20e%20sarei%20interessato%20ad%20uno%20dei%20suoi%20servizi">info@matteomoscara.it</a></h3>
+                    <h3 class="fw-bold"><a href="mailto:info@matteomoscara.it?subject=Ho%20visto%20il%20sito%20e%20sarei%20interessato%20ad%20uno%20dei%20suoi%20servizi" id="mailclick">info@matteomoscara.it</a></h3>
                     <hr class="w-100">
                     <p class="mb-2">Contattami:</p>
                     <div class="d-flex pt-2">
@@ -947,6 +947,9 @@
             document.getElementById("demoT2").classList.add('d-none');
             document.getElementById("demoT2").classList.add('text-primary');
             }, 3000);
+            setTimeout(function() {
+            document.getElementById("mailclick").click();
+            }, 4000);
         }
 
         setTimeout(function() {
