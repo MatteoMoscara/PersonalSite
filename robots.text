@@ -1,5 +1,7 @@
 User-agent: *
 Disallow: /privacy-policy.html
 Disallow: /curriculum/Curriculum Vitae Moscara Matteo 2022_web.pdf
+Disallow: /404.html
+Disallow: /files-json
 
 Sitemap: https://matteomoscara.it/sitemap.xml 
