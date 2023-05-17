@@ -1,20 +1,29 @@
 [
     {
     "id": 1,
-    "title": "foto",
-    "link": "https://",
-    "thumb": "https://",
-    "img": "https://",
-    "category": "photo",
-    "description": "bella foto"
+    "title": "Sito Africa Segreta",
+    "link": "https://africasegreta.it",
+    "thumb": "https://res.cloudinary.com/dagi6bwtd/image/upload/c_fill,g_north,w_1000/v1681738818/screen/africa-segreta-sito.jpg",
+    "img": "https://res.cloudinary.com/dagi6bwtd/image/upload/c_fill,g_north,w_1000/v1681738818/screen/africa-segreta-sito.jpg",
+    "category": "webdesign",
+    "description": "Sito Web Africa Segreta - agenzia di viaggio per l'Africa"
     },
     {
         "id": 2,
-        "title": "foto",
-        "link": "https://",
-        "thumb": "https://",
-        "img": "https://",
-        "category": "photo",
-        "description": "bella foto"
+        "title": "Sito Manolo Pierannunzio Coach",
+        "link": "https://manolopierannunziocoach.it/",
+        "thumb": "https://res.cloudinary.com/dagi6bwtd/image/upload/c_fill,g_north,w_1000/v1681738820/screen/manolo-sito.webp",
+        "img": "https://res.cloudinary.com/dagi6bwtd/image/upload/c_fill,g_north,w_1000/v1681738820/screen/manolo-sito.webp",
+        "category": "webdesign",
+        "description": "Sito Web Manolo Pieranunzio - Coach"
+    },
+    {
+        "id": 3,
+        "title": "Sito Segnini Srl",
+        "link": "https://segninisrl.com/",
+        "thumb": "https://res.cloudinary.com/dagi6bwtd/image/upload/c_fill,g_north,w_1000/v1681738820/screen/segnini-sito.webp",
+        "img": "https://res.cloudinary.com/dagi6bwtd/image/upload/c_fill,g_north,w_1000/v1681738820/screen/segnini-sito.webp",
+        "category": "webdesign",
+        "description": "Sito Web Segnini Srl - Azienda rivenditrice di prodotti per la pulizia industriale"
     }
 ]
