@@ -84,7 +84,7 @@
         "id": 10,
         "title": "Pescara Calcio",
         "link": "https://matteomoscara.it#progetti",
-        "thumb": "https://res.cloudinary.com/dagi6bwtd/image/upload/w_500,h_500,c_thumb/v1681735293/grafica/6x3-multisoggetto-pescaracalcio.jpg rafica Multidoggeto Pescara Calcio",
+        "thumb": "https://res.cloudinary.com/dagi6bwtd/image/upload/w_500,h_500,c_thumb/v1681735293/grafica/6x3-multisoggetto-pescaracalcio.jpg",
         "img": "https://matteomoscara.it/img/grafica/6x3-multisoggetto-pescaracalcio.jpg",
         "category": "grafica",
         "description": "Campagna pubblicitaria Pescara Calcio"
@@ -184,7 +184,7 @@
         "title": "Perugina",
         "link": "https://matteomoscara.it#progetti",
         "thumb": "https://res.cloudinary.com/dagi6bwtd/image/upload/w_500,h_500,c_thumb/v1681735296/grafica/pubblicità_1907.jpg",
-        "img": "https://matteomoscara.it/img/grafica/pubblicità_1907.jpg",
+        "img": "https://matteomoscara.it/img/grafica/pubblicità-1907.jpg",
         "category": "grafica",
         "description": "Pubblicità non reale di un brand Perugina"
     },
