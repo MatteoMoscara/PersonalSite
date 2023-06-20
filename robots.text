@@ -4,5 +4,8 @@ Disallow: /curriculum/Curriculum Vitae Moscara Matteo 2022_web.pdf
 Disallow: /404.html
 Disallow: /files-json
 Disallow /desktop.ini
+Disallow /curriculum.html
+Disallow /Curriculum.txt
+
 
 Sitemap: https://matteomoscara.it/sitemap.xml 
