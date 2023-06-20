@@ -1,1 +1,5 @@
 ErrorDocument 404 /404.html
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RedirectMatch 301 /desktop.ini /index.html
+</IfModule>
