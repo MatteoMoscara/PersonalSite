@@ -139,13 +139,14 @@
       <div class="row text-dark text-center" id="projects-container"></div>
     </section>
 
-    <!-- Contenuto Random -->
-    <section id="random-content" class="mt-5">
-      <div class="random-content mt-5 sticky-text" style="margin-top: 80px!important">
-        <button id="change-layout" class="btn change-layout my-5"><i title="Non sempre è facile cambiare">Basta! Cambio</i></button>
-      </div>
-    </section>
+
   </div>
+      <!-- Contenuto Random -->
+      <section id="random-content" class="mt-5">
+        <div class="random-content mt-5 sticky-text" style="margin-top: 80px!important">
+          <button id="change-layout" class="btn change-layout my-5"><i title="Non sempre è facile cambiare">Basta! Cambio</i></button>
+        </div>
+      </section>
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
@@ -285,8 +286,9 @@
     };
 
     // Aggiungi evento per il bottone "Cambia Aspetto"
-    document.getElementById('change-layout').addEventListener('click', randomize);
-
+    document.getElementById('change-layout').addEventListener('click', function() {
+      location.reload();
+    });
 
     // Testo leggermente sticky
     // Movimento del testo in base al mouse
