@@ -2,642 +2,724 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trentuno - Animato</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gioco 31 - Versione Completa</title>
     <style>
-        :root {
-            --bg-color: #2e7d32;
-            --card-w: 75px;
-            --card-h: 115px;
-        }
-
+        /* --- STILE GENERALE E TAVOLO --- */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #111;
-            margin: 0;
-            overflow: hidden;
-            user-select: none;
-            touch-action: manipulation;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
             color: white;
+            margin: 0;
+            overflow: hidden; /* Evita barre di scorrimento */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        /* SCHERMATE */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 200;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .hidden { display: none !important; }
-        .box { background: #333; padding: 20px; border-radius: 10px; width: 90%; max-width: 350px; text-align: center; }
-        select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px; }
-        button { background: #d32f2f; color: white; font-weight: bold; cursor: pointer; }
-
-        /* TAVOLO */
-        #game-area {
-            position: relative; width: 100vw; height: 100vh;
-            background: radial-gradient(circle, #388e3c 0%, #1b5e20 100%);
-            display: none;
-        }
-
-        /* AVVERSARI (ALTO) */
-        .opponents-row {
-            position: absolute; top: 10px; left: 0; width: 100%;
-            display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-        }
-        .opponent {
-            background: rgba(0,0,0,0.5); padding: 5px; border-radius: 8px;
-            width: 70px; text-align: center; transition: 0.3s;
-            border: 2px solid transparent;
-        }
-        .opponent.active-turn { border-color: #ffd700; background: rgba(255, 215, 0, 0.2); }
-        .opponent.knocked { border-color: red; background: rgba(255, 0, 0, 0.3); }
-        
-        .mini-cards { display: flex; justify-content: center; margin-top: 5px; }
-        .mini-card { width: 10px; height: 16px; background: white; margin: 0 1px; border-radius: 2px; }
-
-        /* CENTRO (MAZZO/SCARTI) */
-        .center-table {
-            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; gap: 40px;
-        }
-        .pile {
-            width: var(--card-w); height: var(--card-h);
-            border-radius: 8px; position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            background-color: rgba(255,255,255,0.1);
-        }
-        .pile-label {
-            position: absolute; bottom: -25px; width: 100%; text-align: center;
-            font-size: 12px; font-weight: bold; text-shadow: 1px 1px 2px black;
-        }
-        #deck { cursor: pointer; }
-        #discard { cursor: pointer; border: 2px dashed rgba(255,255,255,0.3); }
-
-        /* GIOCATORE (BASSO) */
-        .player-zone {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            display: flex; flex-direction: column; align-items: center;
-            padding-bottom: 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        }
-        .hand-container {
-            display: flex; justify-content: center; gap: 10px; height: 130px; margin-bottom: 10px;
-            align-items: flex-end;
-        }
-        .controls { display: flex; gap: 10px; margin-bottom: 5px; }
-        .btn-action { padding: 8px 20px; border-radius: 20px; font-weight: bold; border: 2px solid white; cursor: pointer; }
-        .btn-knock { background: #ff9800; color: black; }
-        .btn-knock:disabled { background: #555; color: #888; cursor: not-allowed; border-color: #555;}
-
-        /* CARTE E GRAFICA */
-        .card {
-            width: var(--card-w); height: var(--card-h);
-            background-color: white; border-radius: 8px;
+        #tavolo-gioco {
             position: relative;
-            box-shadow: -2px 2px 5px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            user-select: none;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, #388e3c 0%, #1b5e20 100%); /* Effetto panno verde realistico */
+            border-radius: 50%;
+            border: 20px solid #5d4037; /* Bordo in legno */
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
+
+        /* --- CENTRO DEL TAVOLO (Mazzo e Scarti) --- */
+        #area-centrale {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 140px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .slot-mazzo, .slot-scarti {
+            width: 70px;
+            height: 110px;
+            border-radius: 5px;
+            background-color: rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .etichetta-centro {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        /* --- GIOCATORI --- */
+        .giocatore {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            transform: translate(-50%, -50%); /* Centra l'elemento sulle coordinate */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border: 3px solid #333;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-giocatore {
+            background: rgba(0,0,0,0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin-top: -10px;
+            z-index: 3;
+            text-align: center;
+            font-size: 14px;
+            min-width: 80px;
+        }
+
+        .turno-attivo .avatar {
+            border-color: #ffeb3b; /* Giallo quando è il turno */
+            box-shadow: 0 0 15px #ffeb3b;
+        }
+
+        /* --- CARTE (SPRITE SHEET) --- */
+        .area-carte {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            height: 120px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .carta {
+            width: 60px;
+            height: 100px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/c4/Carte_napoletane_al_completo.jpg');
+            background-size: 600px 400px; /* Adattato per l'immagine 10col x 4righe */
+            border-radius: 6px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.2s, margin 0.2s;
+            background-color: white;
+            position: relative;
+            display: inline-block;
+            margin-left: -25px; /* Effetto ventaglio */
+        }
+
+        .carta:first-child { margin-left: 0; }
         
-        /* Immagine Reale */
-        .card-img {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            border-radius: 8px; object-fit: cover; z-index: 2;
-        }
-        /* Fallback Grafico (se immagine non carica) */
-        .card-fallback {
-            z-index: 1; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: white; border-radius: 8px; color: black; font-weight: bold;
-            border: 1px solid #ccc;
-        }
-        .card-val { font-size: 20px; position: absolute; top: 5px; left: 5px; }
-        .card-suit { font-size: 40px; }
-
-        .card-back {
-            background: repeating-linear-gradient(45deg, #b71c1c, #b71c1c 10px, #d32f2f 10px, #d32f2f 20px);
-            border: 3px solid white;
-        }
-        .card-back .card-img, .card-back .card-fallback { display: none; }
-
-        .playable { cursor: pointer; transition: transform 0.2s; }
-        .playable:hover { transform: translateY(-20px); border: 2px solid yellow; z-index: 10; }
-
-        /* ANIMAZIONE VOLO */
-        .flying-card {
-            position: fixed;
-            width: var(--card-w); height: var(--card-h);
-            background-color: white; border-radius: 8px;
+        /* Effetto hover solo per il giocatore umano */
+        .giocatore-umano .carta:hover {
+            transform: translateY(-15px) scale(1.1);
+            z-index: 20;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            z-index: 9999;
-            pointer-events: none;
-            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Messaggi */
-        #status-msg { color: #ffd700; font-size: 14px; margin-top: 5px; text-shadow: 1px 1px 1px black; }
+        .carta-retro {
+            background-image: none;
+            background: repeating-linear-gradient(
+                45deg,
+                #606dbc,
+                #606dbc 10px,
+                #465298 10px,
+                #465298 20px
+            );
+            border: 2px solid white;
+        }
+
+        .carta-selezionata {
+            border: 3px solid #ffeb3b;
+            transform: translateY(-20px) !important;
+        }
+
+        /* --- CONTROLLI UTENTE --- */
+        #pannello-comandi {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 100;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-pesca { background-color: #2196F3; color: white; }
+        .btn-scarta { background-color: #F44336; color: white; }
+        .btn-bussa { background-color: #FF9800; color: white; }
+        
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        /* --- MESSAGGI DI GIOCO --- */
+        #messaggio-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none; /* Nascosto di default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            color: white;
+            text-align: center;
+        }
+
+        #messaggio-testo { font-size: 40px; margin-bottom: 20px; color: #ffeb3b; }
+        #log-partite {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 200px;
+        }
 
     </style>
 </head>
 <body>
 
-    <div id="setup-screen" class="overlay">
-        <div class="box">
-            <h1 style="color:#ffd700">Trentuno 🇮🇹</h1>
-            <label>Giocatori Umani:</label>
-            <select id="n-humans">
-                <option value="1">1 (Vs Bot)</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-            </select>
-            <label>Bot:</label>
-            <select id="n-bots">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3" selected>3</option>
-                <option value="4">4</option>
-            </select>
-            <button onclick="initGame()">GIOCA</button>
-        </div>
-    </div>
+    <div id="log-partite">Log Partita:<br></div>
 
-    <div id="pass-screen" class="overlay hidden">
-        <div class="box">
-            <h2 style="color:#ffd700">Tocca a <span id="pass-name"></span></h2>
-            <button onclick="confirmPass()">PRONTO</button>
-        </div>
-    </div>
-
-    <div id="game-area">
+    <div id="tavolo-gioco">
         
-        <div class="opponents-row" id="opp-container"></div>
-
-        <div class="center-table">
-            <div class="pile card-back" id="deck" onclick="handleInput('deck')">
-                <div class="pile-label">MAZZO</div>
+        <div id="area-centrale">
+            <div class="slot-mazzo" id="mazzo-coperto" onclick="giocatorePescaMazzo()">
+                <div class="carta carta-retro" style="width:100%; height:100%; margin:0;"></div>
+                <div class="etichetta-centro">MAZZO</div>
             </div>
-            <div class="pile" id="discard" onclick="handleInput('discard')">
-                <div class="pile-label">SCARTI</div>
-            </div>
-        </div>
-
-        <div class="player-zone">
-            <div class="controls">
-                <button class="btn-action btn-knock" id="btn-knock" onclick="handleKnock()" disabled>✊ BUSSA</button>
-            </div>
-            
-            <div class="hand-container" id="player-hand"></div>
-            
-            <div style="text-align: center;">
-                <span id="p-name" style="font-weight:bold; font-size:1.2em">TU</span> 
-                <span id="p-score" style="color:#aaa;"></span>
-                <div id="p-lives" style="color:#ff5252;"></div>
-                <div id="status-msg">In attesa...</div>
+            <div class="slot-scarti" id="pozzetto-scarti" onclick="giocatorePescaScarti()">
+                <div class="etichetta-centro">SCARTI</div>
             </div>
         </div>
+
+        </div>
+
+    <div id="pannello-comandi">
+        <button id="btn-pesca-mazzo" class="btn-pesca" onclick="giocatorePescaMazzo()">Pesca Mazzo</button>
+        <button id="btn-pesca-scarti" class="btn-pesca" onclick="giocatorePescaScarti()">Pesca Scarti</button>
+        <button id="btn-scarta" class="btn-scarta" onclick="giocatoreScarta()" disabled>Scarta</button>
+        <button id="btn-bussa" class="btn-bussa" onclick="giocatoreBussa()">BUSSA (Chiudi)</button>
+    </div>
+
+    <div id="messaggio-overlay">
+        <div id="messaggio-testo">VITTORIA!</div>
+        <button onclick="location.reload()" style="background:white; color:black;">Gioca Ancora</button>
     </div>
 
 <script>
-/**
- * TRENTUNO V5 - ANIMAZIONI & GRAFICA ROBUSTA
- */
-
-// CONFIGURAZIONE
-const ASSETS_URL = "https://raw.githubusercontent.com/kaizhu256/react-scopa/master/src/assets/cards/";
-const SUITS = ['B', 'C', 'D', 'S']; // Bastoni, Coppe, Denari, Spade
-const SUIT_ICONS = {'B': '🪵', 'C': '🍷', 'D': '🟡', 'S': '⚔️'};
-const RANKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; 
-
-// STATO
-let players = [];
-let deck = [];
-let discardPile = [];
-let turnIdx = 0;
-let knockerIdx = -1;
-let phase = 'draw'; // draw, discard, anim
-let startPlayer = 0;
-
-// CLASSI
-class Card {
-    constructor(suit, rank) {
-        this.suit = suit;
-        this.rank = rank;
-        // Valore gioco
-        this.value = (rank === 1) ? 11 : (rank >= 8 ? 10 : rank);
-        // Grafica
-        this.imgSrc = `${ASSETS_URL}${rank}${suit}.png`;
-        this.fallbackIcon = SUIT_ICONS[suit];
-        this.label = rank;
-    }
-}
-
-class Player {
-    constructor(id, name, isBot) {
-        this.id = id;
-        this.name = name;
-        this.isBot = isBot;
-        this.lives = 3;
-        this.hand = [];
-        this.eliminated = false;
-        this.score = 0;
-    }
-    calcScore() {
-        let s = {'B':0,'C':0,'D':0,'S':0};
-        this.hand.forEach(c => s[c.suit] += c.value);
-        this.score = Math.max(...Object.values(s));
-        return this.score;
-    }
-}
-
-// SETUP
-function initGame() {
-    let h = parseInt(document.getElementById('n-humans').value);
-    let b = parseInt(document.getElementById('n-bots').value);
-    if(h+b > 6) { alert("Max 6 giocatori"); return; }
+    /**
+     * CONFIGURAZIONE E VARIABILI GLOBALI
+     */
+    const semi = ['denari', 'coppe', 'bastoni', 'spade'];
+    const valori = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // 8=Fante, 9=Cavallo, 10=Re
     
-    players = [];
-    let id=0;
-    for(let i=0; i<h; i++) players.push(new Player(id++, `Giocatore ${i+1}`, false));
-    for(let i=0; i<b; i++) players.push(new Player(id++, `Bot ${i+1}`, true));
+    let mazzo = [];
+    let pilaScarti = [];
+    let giocatori = []; // Array di oggetti giocatore
+    let indiceGiocatoreCorrente = 0;
+    let faseTurno = 'PESCA'; // 'PESCA' o 'SCARTO'
+    let partitaFinita = false;
 
-    document.getElementById('setup-screen').classList.add('hidden');
-    document.getElementById('game-area').style.display = 'block';
-    
-    newRound();
-}
+    // --- CLASSE CARTA ---
+    class Carta {
+        constructor(seme, rank) {
+            this.seme = seme;
+            this.rank = rank;
+            this.id = Math.random().toString(36).substr(2, 9); // ID univoco
+        }
 
-function newRound() {
-    knockerIdx = -1;
-    phase = 'draw';
-    deck = [];
-    discardPile = [];
-    
-    // Crea Mazzo
-    SUITS.forEach(s => RANKS.forEach(r => deck.push(new Card(s,r))));
-    deck.sort(() => Math.random() - 0.5);
-
-    // Distribuzione
-    let active = players.filter(p => !p.eliminated);
-    if(active.length < 2) { alert(`🏆 ${active[0].name} VINCE!`); location.reload(); return; }
-
-    active.forEach(p => p.hand = []);
-    for(let i=0; i<3; i++) active.forEach(p => p.hand.push(deck.pop()));
-    
-    discardPile.push(deck.pop());
-
-    turnIdx = startPlayer;
-    while(players[turnIdx].eliminated) turnIdx = (turnIdx+1)%players.length;
-
-    renderBoard();
-    turnManager();
-}
-
-function turnManager() {
-    let p = players[turnIdx];
-    
-    // Controllo fine giro bussata
-    if(knockerIdx !== -1 && turnIdx === knockerIdx) {
-        endRound();
-        return;
+        // Calcola il valore per il gioco del 31
+        getValorePunti() {
+            if (this.rank === 1) return 11; // Asso
+            if (this.rank >= 8) return 10;  // Figure
+            return this.rank;               // Numeri
+        }
     }
 
-    if(p.eliminated) { passTurn(); return; }
+    /**
+     * INIZIALIZZAZIONE GIOCO
+     */
+    window.onload = function() {
+        iniziaPartita();
+    };
 
-    if(!p.isBot) {
-        // Umano
-        let humansAlive = players.filter(x => !x.isBot && !x.eliminated).length;
-        if(humansAlive > 1 && document.getElementById('pass-screen').classList.contains('hidden')) {
-            document.getElementById('pass-name').innerText = p.name;
-            document.getElementById('pass-screen').classList.remove('hidden');
+    function iniziaPartita() {
+        log("Inizio nuova partita...");
+        mazzo = creaMazzo();
+        pilaScarti = [];
+        partitaFinita = false;
+        
+        // Creazione 4 Giocatori
+        giocatori = [
+            { nome: "TU (Umano)", tipo: "UMANO", mano: [], punteggio: 0, divId: "p0" },
+            { nome: "Mario (CPU)", tipo: "BOT", mano: [], punteggio: 0, divId: "p1" },
+            { nome: "Luigi (CPU)", tipo: "BOT", mano: [], punteggio: 0, divId: "p2" },
+            { nome: "Peach (CPU)", tipo: "BOT", mano: [], punteggio: 0, divId: "p3" }
+        ];
+
+        // Distribuzione Carte (3 a testa)
+        for (let i = 0; i < 3; i++) {
+            giocatori.forEach(g => pescaoDaMazzo(g));
+        }
+
+        // Prima carta nel pozzo degli scarti
+        const primaScartata = mazzo.pop();
+        pilaScarti.push(primaScartata);
+
+        aggiornaGraficaTavolo();
+        aggiornaPilaScartiGrafica();
+        gestisciTurno();
+    }
+
+    function creaMazzo() {
+        let m = [];
+        semi.forEach(s => {
+            valori.forEach(v => {
+                m.push(new Carta(s, v));
+            });
+        });
+        // Mescola (Algoritmo Fisher-Yates)
+        for (let i = m.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [m[i], m[j]] = [m[j], m[i]];
+        }
+        return m;
+    }
+
+    /**
+     * LOGICA DEL PUNTEGGIO (FIXED BUG)
+     * Calcola il punteggio massimo sommando SOLO carte dello stesso seme.
+     */
+    function calcolaPunteggio(mano) {
+        let puntiPerSeme = { 'denari': 0, 'coppe': 0, 'bastoni': 0, 'spade': 0 };
+        
+        // Conta punti per ogni seme
+        mano.forEach(c => {
+            puntiPerSeme[c.seme] += c.getValorePunti();
+        });
+
+        // Trova il massimo
+        let max = 0;
+        for (let s in puntiPerSeme) {
+            if (puntiPerSeme[s] > max) max = puntiPerSeme[s];
+        }
+
+        // Controllo speciale: 3 carte dello stesso valore (es. tre 7) = 30.5 punti (Regola opzionale spesso usata)
+        // Ma per ora atteniamoci al "31" classico (stesso seme).
+        return max;
+    }
+
+    /**
+     * GESTIONE TURNI E FLUSSO
+     */
+    function gestisciTurno() {
+        if (partitaFinita) return;
+
+        const giocatore = giocatori[indiceGiocatoreCorrente];
+        const uiDiv = document.getElementById(giocatore.divId);
+        
+        // Evidenzia visivamente chi sta giocando
+        document.querySelectorAll('.giocatore').forEach(d => d.classList.remove('turno-attivo'));
+        if(uiDiv) uiDiv.classList.add('turno-attivo');
+
+        log(`Turno di: ${giocatore.nome}`);
+
+        // Calcola punteggio attuale
+        giocatore.punteggio = calcolaPunteggio(giocatore.mano);
+        aggiornaInfoPunteggio(indiceGiocatoreCorrente);
+
+        // Controllo vittoria immediata (31)
+        if (giocatore.punteggio === 31) {
+            finePartita(giocatore.nome + " ha fatto 31!");
+            return;
+        }
+
+        if (giocatore.tipo === "UMANO") {
+            abilitaControlliUmano(true);
         } else {
-            setStatus(`Tocca a te! Pesca.`);
-            renderBoard();
-        }
-    } else {
-        // Bot
-        setStatus(`${p.name} sta pensando...`);
-        renderBoard(); // Aggiorna per mostrare il bordo dorato
-        setTimeout(botLogic, 1000);
-    }
-}
-
-function confirmPass() {
-    document.getElementById('pass-screen').classList.add('hidden');
-    renderBoard();
-}
-
-// LOGICA UMANO
-function handleInput(type, idx) {
-    let p = players[turnIdx];
-    if(p.isBot || phase === 'anim') return;
-
-    // PESCARE
-    if(phase === 'draw') {
-        if(type === 'deck') {
-            if(deck.length===0) refillDeck();
-            let c = deck.pop();
-            animateCard('deck', 'player-hand', null, () => {
-                p.hand.push(c);
-                phase = 'discard';
-                setStatus("Seleziona carta da scartare");
-                renderBoard();
-                checkInstant31(p);
-            });
-        } else if (type === 'discard') {
-            if(discardPile.length===0) return;
-            let c = discardPile.pop();
-            animateCard('discard', 'player-hand', c, () => {
-                p.hand.push(c);
-                phase = 'discard';
-                setStatus("Seleziona carta da scartare");
-                renderBoard();
-                checkInstant31(p);
-            });
+            abilitaControlliUmano(false); // Disabilita bottoni mentre gioca il bot
+            setTimeout(() => botGioca(giocatore), 1500); // Ritardo per realismo
         }
     }
-    // SCARTARE
-    else if(phase === 'discard' && typeof idx === 'number') {
-        let c = p.hand[idx];
-        // Rimuovi logicamente subito per l'animazione corretta
-        p.hand.splice(idx, 1);
+
+    function passaTurno() {
+        indiceGiocatoreCorrente++;
+        if (indiceGiocatoreCorrente >= giocatori.length) indiceGiocatoreCorrente = 0;
+        faseTurno = 'PESCA';
+        gestisciTurno();
+    }
+
+    /**
+     * AZIONI DI GIOCO (LOGICA COMUNE)
+     */
+    function pescaoDaMazzo(giocatore) {
+        if (mazzo.length === 0) {
+            // Se mazzo finito, rimescola gli scarti (tranne l'ultimo)
+            log("Mazzo finito! Rimescolo scarti.");
+            const ultima = pilaScarti.pop();
+            mazzo = pilaScarti; // Gli scarti diventano mazzo (dovrebbero essere mescolati)
+            mazzo.sort(() => Math.random() - 0.5);
+            pilaScarti = [ultima];
+        }
+        const carta = mazzo.pop();
+        giocatore.mano.push(carta);
+        return carta;
+    }
+
+    function pescaDaScarti(giocatore) {
+        if (pilaScarti.length === 0) return;
+        const carta = pilaScarti.pop();
+        giocatore.mano.push(carta);
+        return carta;
+    }
+
+    /**
+     * AZIONI GIOCATORE UMANO
+     */
+    let cartaSelezionataIndex = -1;
+
+    function abilitaControlliUmano(abilita) {
+        document.getElementById('btn-pesca-mazzo').disabled = !abilita || faseTurno !== 'PESCA';
+        document.getElementById('btn-pesca-scarti').disabled = !abilita || faseTurno !== 'PESCA';
+        document.getElementById('btn-bussa').disabled = !abilita || faseTurno !== 'PESCA';
         
-        // Animazione dalla mano (posizione i-esima) al discard
-        // Calcolo ID della carta specifica nel DOM
-        let cardId = `card-${idx}`;
+        // Il tasto scarta si abilita solo se ho selezionato una carta E sono in fase di scarto
+        document.getElementById('btn-scarta').disabled = true; 
+    }
+
+    // Funzioni collegate ai bottoni HTML
+    window.giocatorePescaMazzo = function() {
+        if (indiceGiocatoreCorrente !== 0 || faseTurno !== 'PESCA') return;
+        pescaoDaMazzo(giocatori[0]);
+        faseTurno = 'SCARTO';
+        aggiornaManoUmano();
+        abilitaControlliUmano(true);
+        log("Hai pescato dal mazzo.");
+    };
+
+    window.giocatorePescaScarti = function() {
+        if (indiceGiocatoreCorrente !== 0 || faseTurno !== 'PESCA') return;
+        pescaDaScarti(giocatori[0]);
+        faseTurno = 'SCARTO';
+        aggiornaManoUmano();
+        aggiornaPilaScartiGrafica();
+        abilitaControlliUmano(true);
+        log("Hai pescato dagli scarti.");
+    };
+
+    window.selezionaCartaUmano = function(index) {
+        if (indiceGiocatoreCorrente !== 0 || faseTurno !== 'SCARTO') return;
+        cartaSelezionataIndex = index;
         
-        animateCard(cardId, 'discard', c, () => {
-            discardPile.push(c);
-            checkInstant31(p, true); // true = end turn if not 31
+        // Aggiorna grafica selezione
+        const carteDom = document.querySelectorAll('#p0 .carta');
+        carteDom.forEach((c, i) => {
+            if (i === index) c.classList.add('carta-selezionata');
+            else c.classList.remove('carta-selezionata');
+        });
+
+        document.getElementById('btn-scarta').disabled = false;
+    };
+
+    window.giocatoreScarta = function() {
+        if (cartaSelezionataIndex === -1) return;
+        
+        const g = giocatori[0];
+        const cartaScartata = g.mano.splice(cartaSelezionataIndex, 1)[0]; // Rimuove carta
+        pilaScarti.push(cartaScartata);
+        
+        log(`Hai scartato: ${cartaScartata.rank} di ${cartaScartata.seme}`);
+        
+        cartaSelezionataIndex = -1;
+        aggiornaManoUmano();
+        aggiornaPilaScartiGrafica();
+        passaTurno();
+    };
+
+    window.giocatoreBussa = function() {
+        if (indiceGiocatoreCorrente !== 0) return;
+        finePartita("Hai Bussato!");
+    }
+
+    /**
+     * INTELLIGENZA ARTIFICIALE (BOT)
+     */
+    function botGioca(bot) {
+        log(`Bot ${bot.nome} sta pensando...`);
+
+        // 1. DECISIONE PESCA
+        // Il bot guarda se la carta negli scarti gli serve per aumentare il punteggio
+        const cartaInScarti = pilaScarti[pilaScarti.length - 1];
+        let haPescatoScarti = false;
+
+        if (cartaInScarti) {
+            // Simuliamo: se la prendo, il mio punteggio migliora?
+            let manoSimulata = [...bot.mano, cartaInScarti];
+            let scoreAttuale = calcolaPunteggio(bot.mano);
+            let scorePotenziale = calcolaPunteggio(manoSimulata); // Nota: qui la mano ha 4 carte, il calcolo deve essere furbo
+
+            // Semplificazione: se la carta vale 10 o 11 ed è del mio seme migliore, la prendo
+            if (scorePotenziale > scoreAttuale) {
+                pescaDaScarti(bot);
+                haPescatoScarti = true;
+                log(`${bot.nome} pesca dagli scarti.`);
+            }
+        }
+
+        if (!haPescatoScarti) {
+            pescaoDaMazzo(bot);
+            log(`${bot.nome} pesca dal mazzo.`);
+        }
+
+        // 2. DECISIONE SCARTO
+        // Il bot deve scartare la carta che massimizza il punteggio delle restanti 3
+        let migliorPunteggioRimasto = -1;
+        let indiceDaScartare = 0;
+
+        for (let i = 0; i < bot.mano.length; i++) {
+            // Crea una copia della mano senza la carta i
+            let manoTest = bot.mano.filter((_, idx) => idx !== i);
+            let p = calcolaPunteggio(manoTest);
+            if (p > migliorPunteggioRimasto) {
+                migliorPunteggioRimasto = p;
+                indiceDaScartare = i;
+            }
+        }
+
+        const scartata = bot.mano.splice(indiceDaScartare, 1)[0];
+        pilaScarti.push(scartata);
+        log(`${bot.nome} scarta una carta.`);
+        
+        aggiornaPilaScartiGrafica();
+        aggiornaGraficaBot(bot); // Mostra numero carte o animazione
+
+        // Il bot può bussare? Diciamo se ha più di 28 punti
+        if (calcolaPunteggio(bot.mano) >= 28) {
+            log(`${bot.nome} tenta di bussare!`);
+            // Qui potresti implementare la logica del "last turn"
+        }
+
+        setTimeout(passaTurno, 1000);
+    }
+
+    /**
+     * GESTIONE GRAFICA E SPRITES
+     */
+    function aggiornaGraficaTavolo() {
+        const tavolo = document.getElementById('tavolo-gioco');
+        
+        // Rimuovi vecchi giocatori se esistono, tranne area centrale
+        document.querySelectorAll('.giocatore').forEach(e => e.remove());
+
+        // Parametri cerchio
+        const raggio = 320; 
+        const centroX = 400; 
+        const centroY = 400;
+
+        giocatori.forEach((g, i) => {
+            const div = document.createElement('div');
+            div.className = 'giocatore';
+            div.id = g.divId;
+            if (i === 0) div.classList.add('giocatore-umano');
+
+            // Posizionamento Circolare
+            // Umano (i=0) a 90 gradi (in basso), poi senso orario
+            // Angolo in radianti. 0 è a destra. 
+            // Vogliamo: 0->90°(basso), 1->180°(sx), 2->270°(alto), 3->360°/0(dx)
+            // Formula corretta per layout orario partendo dal basso:
+            const angoli = [90, 180, 270, 0]; 
+            const rad = angoli[i] * (Math.PI / 180);
+            
+            const x = centroX + raggio * Math.cos(rad); // Nota: cos per X
+            const y = centroY + raggio * Math.sin(rad); // Nota: sin per Y
+
+            // Piccola correzione per i laterali per non uscire dallo schermo se rettangolare
+            div.style.left = `${x}px`;
+            div.style.top = `${y}px`;
+
+            // HTML Interno
+            div.innerHTML = `
+                <div class="avatar">
+                    <div style="width:100%;height:100%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#333;">
+                        ${g.nome.charAt(0)}
+                    </div>
+                </div>
+                <div class="info-giocatore">
+                    <div>${g.nome}</div>
+                    <div id="score-${i}">Pt: ${g.punteggio}</div>
+                </div>
+                <div class="area-carte" id="carte-${i}"></div>
+            `;
+            
+            tavolo.appendChild(div);
+            
+            // Renderizza carte iniziali
+            if(i === 0) aggiornaManoUmano();
+            else aggiornaGraficaBot(g);
         });
     }
-}
 
-function handleKnock() {
-    let p = players[turnIdx];
-    if(p.isBot || phase !== 'draw' || knockerIdx !== -1) return;
-    if(p.calcScore() < 20) { alert("Serve 20+"); return; }
-    
-    knockerIdx = turnIdx;
-    alert("Hai BUSSATO!");
-    passTurn();
-}
+    function generaHtmlCarta(carta, isFronte, onClickIndex = -1) {
+        const el = document.createElement('div');
+        el.className = 'carta';
+        if (!isFronte) {
+            el.classList.add('carta-retro');
+            return el;
+        }
 
-// LOGICA BOT
-function botLogic() {
-    let p = players[turnIdx];
-    
-    // 1. Bussa?
-    if(knockerIdx === -1 && phase === 'draw' && p.calcScore() >= 26) {
-        knockerIdx = turnIdx;
-        setStatus(`${p.name} HA BUSSATO!`);
-        passTurn();
-        return;
-    }
-
-    // 2. Pesca
-    let top = discardPile[discardPile.length-1];
-    let takeDiscard = false;
-    if(top) {
-        let suits = {'B':0,'C':0,'D':0,'S':0};
-        p.hand.forEach(c => suits[c.suit] += c.value);
-        let best = Object.keys(suits).reduce((a,b)=>suits[a]>suits[b]?a:b);
-        if(top.suit === best && top.value >= 10) takeDiscard = true;
-    }
-
-    let cardDraw;
-    let sourceId;
-    
-    if(takeDiscard) {
-        cardDraw = discardPile.pop();
-        sourceId = 'discard';
-    } else {
-        if(deck.length===0) refillDeck();
-        cardDraw = deck.pop();
-        sourceId = 'deck';
-    }
-
-    // Animazione Pesca Bot (verso l'icona avversario)
-    let destId = `opp-${p.id}`; // ID dell'icona bot in alto
-    // Se il bot non è nell'area avversari (es. bug), usa un punto generico
-    if(!document.getElementById(destId)) destId = 'setup-screen'; // Fallback
-
-    animateCard(sourceId, destId, (sourceId==='discard'?cardDraw:null), () => {
-        p.hand.push(cardDraw);
+        // Logica Sprite
+        const w = 60; // Larghezza carta CSS
+        const h = 100; // Altezza carta CSS
         
-        // Pausa pensiero scarto
-        setTimeout(() => {
-             let bestScore = -1;
-             let discIdx = 0;
-             for(let i=0; i<4; i++) {
-                 let tmp = [...p.hand];
-                 tmp.splice(i,1);
-                 let s = new Player(0,'',true); s.hand=tmp; 
-                 let sc = s.calcScore();
-                 if(sc > bestScore || (sc===bestScore && p.hand[i].value < p.hand[discIdx].value)) {
-                     bestScore = sc;
-                     discIdx = i;
-                 }
-             }
-             
-             let discCard = p.hand.splice(discIdx, 1)[0];
-             
-             // Animazione Scarto Bot (da icona avversario a scarti)
-             animateCard(destId, 'discard', discCard, () => {
-                 discardPile.push(discCard);
-                 if(bestScore === 31) {
-                     alert(`${p.name} HA 31!`);
-                     endRound(p.id);
-                 } else {
-                     passTurn();
-                 }
-             });
-        }, 1000);
-    });
-}
+        const semiMap = { 'denari': 0, 'coppe': 1, 'bastoni': 2, 'spade': 3 };
+        const sIdx = semiMap[carta.seme];
+        const rIdx = carta.rank - 1;
 
-// ANIMAZIONE PRINCIPALE
-function animateCard(fromId, toId, cardObj, callback) {
-    phase = 'anim'; // Blocca input
-    
-    let fromEl = document.getElementById(fromId);
-    let toEl = document.getElementById(toId);
-    
-    if(!fromEl || !toEl) { if(callback) callback(); return; }
-
-    let rect1 = fromEl.getBoundingClientRect();
-    let rect2 = toEl.getBoundingClientRect();
-
-    // Crea elemento volante
-    let fly = document.createElement('div');
-    fly.className = 'flying-card';
-    if(cardObj) {
-        // Faccia
-        fly.innerHTML = getCardHTML(cardObj);
-    } else {
-        // Dorso
-        fly.className += ' card-back';
-    }
-
-    // Posizione iniziale
-    fly.style.left = rect1.left + 'px';
-    fly.style.top = rect1.top + 'px';
-    
-    document.body.appendChild(fly);
-
-    // Forza reflow
-    fly.offsetHeight;
-
-    // Transizione
-    fly.style.left = rect2.left + 'px';
-    fly.style.top = rect2.top + 'px';
-
-    setTimeout(() => {
-        fly.remove();
-        if(callback) callback();
-    }, 600);
-}
-
-// UTILS
-function passTurn() {
-    phase = 'draw';
-    do {
-        turnIdx = (turnIdx+1)%players.length;
-    } while(players[turnIdx].eliminated);
-    turnManager();
-}
-
-function checkInstant31(p, endIfNo=false) {
-    if(p.calcScore() === 31) {
-        setTimeout(() => {alert("31!"); endRound(p.id);}, 100);
-    } else if (endIfNo) {
-        passTurn();
-    }
-}
-
-function endRound(instWin=null) {
-    let active = players.filter(p=>!p.eliminated);
-    let msg = "RISULTATI:\n";
-    let losers = [];
-    
-    active.forEach(p => msg += `${p.name}: ${p.calcScore()}\n`);
-
-    if(instWin!==null) {
-        losers = active.filter(p=>p.id!==instWin);
-        msg += `\n${players.find(p=>p.id===instWin).name} vince con 31!`;
-    } else {
-        let min = Math.min(...active.map(p=>p.score));
-        losers = active.filter(p=>p.score===min);
-        msg += `\nPerde chi ha ${min}`;
-    }
-
-    losers.forEach(p => {
-        p.lives--;
-        if(p.lives<=0) { p.lives=0; p.eliminated=true; }
-    });
-
-    alert(msg);
-    startPlayer = (startPlayer+1)%players.length;
-    newRound();
-}
-
-function refillDeck() {
-    if(discardPile.length<2) return;
-    let top = discardPile.pop();
-    while(discardPile.length>0) deck.push(discardPile.pop());
-    deck.sort(()=>Math.random()-0.5);
-    discardPile.push(top);
-    setStatus("Mazzo rimescolato");
-}
-
-function setStatus(t) { document.getElementById('status-msg').innerText = t; }
-
-function getCardHTML(c) {
-    // HTML per carta: Immagine + Fallback
-    return `
-        <div class="card-fallback">
-            <div class="card-val">${c.label}</div>
-            <div class="card-suit">${c.fallbackIcon}</div>
-        </div>
-        <img src="${c.imgSrc}" class="card-img" onerror="this.style.display='none'">
-    `;
-}
-
-// RENDER GIOCO
-function renderBoard() {
-    let p = players[turnIdx];
-    let isMyTurn = !p.isBot && document.getElementById('pass-screen').classList.contains('hidden');
-
-    // 1. AVVERSARI
-    let oppDiv = document.getElementById('opp-container');
-    oppDiv.innerHTML = '';
-    players.forEach(pl => {
-        if(pl.id === p.id && isMyTurn) return; // Non mostrare me stesso in alto se è il mio turno
-        if(pl.eliminated) return;
-
-        let d = document.createElement('div');
-        d.id = `opp-${pl.id}`; // Per animazione
-        d.className = `opponent ${pl.id===turnIdx?'active-turn':''} ${pl.id===knockerIdx?'knocked':''}`;
-        d.innerHTML = `
-            <div style="font-size:11px; font-weight:bold; color:white">${pl.name}</div>
-            <div style="font-size:10px; color:#ff5252">${'❤️'.repeat(pl.lives)}</div>
-            <div class="mini-cards">${'<div class="mini-card"></div>'.repeat(pl.hand.length)}</div>
-        `;
-        oppDiv.appendChild(d);
-    });
-
-    // 2. MAZZO E SCARTI
-    let dPile = document.getElementById('discard');
-    dPile.innerHTML = '';
-    if(discardPile.length>0) {
-        let top = discardPile[discardPile.length-1];
-        let cardDiv = document.createElement('div');
-        cardDiv.className = 'card';
-        cardDiv.innerHTML = getCardHTML(top);
-        dPile.appendChild(cardDiv);
-        dPile.style.border = 'none';
-        dPile.style.background = 'transparent';
-    } else {
-        dPile.innerHTML = '<div class="pile-label">SCARTI</div>';
-        dPile.style.border = '2px dashed rgba(255,255,255,0.3)';
-    }
-
-    // 3. GIOCATORE ATTUALE
-    document.getElementById('p-name').innerText = p.name;
-    document.getElementById('p-lives').innerText = '❤️'.repeat(p.lives);
-    document.getElementById('p-score').innerText = isMyTurn ? `(${p.calcScore()})` : '';
-
-    let handDiv = document.getElementById('player-hand');
-    handDiv.innerHTML = '';
-
-    if(isMyTurn) {
-        // Tasti
-        document.getElementById('btn-knock').disabled = !(phase==='draw' && knockerIdx===-1 && p.calcScore()>=20);
+        el.style.backgroundPosition = `-${rIdx * w}px -${sIdx * h}px`;
         
-        // Carte
-        p.hand.forEach((c, idx) => {
-            let div = document.createElement('div');
-            div.id = `card-${idx}`; // Per animazione scarto
-            div.className = `card ${phase==='discard'?'playable':''}`;
-            div.innerHTML = getCardHTML(c);
-            if(phase==='discard') div.onclick = () => handleInput('discard', idx);
-            handDiv.appendChild(div);
+        if (onClickIndex >= 0) {
+            el.onclick = () => selezionaCartaUmano(onClickIndex);
+        }
+
+        return el;
+    }
+
+    function aggiornaManoUmano() {
+        const container = document.getElementById('carte-0');
+        container.innerHTML = '';
+        giocatori[0].mano.forEach((c, index) => {
+            container.appendChild(generaHtmlCarta(c, true, index));
         });
-    } else {
-        // Se non è il mio turno (es: sta giocando un bot o visuale spettatore)
-        document.getElementById('btn-knock').disabled = true;
-        // Mostra dorso
-        p.hand.forEach(() => {
-            let div = document.createElement('div');
-            div.className = 'card card-back';
-            handDiv.appendChild(div);
+        
+        // Aggiorna anche il punteggio a video
+        giocatori[0].punteggio = calcolaPunteggio(giocatori[0].mano);
+        aggiornaInfoPunteggio(0);
+    }
+
+    function aggiornaGraficaBot(bot) {
+        // I bot mostrano il retro delle carte
+        // Troviamo l'indice nell'array giocatori
+        const index = giocatori.indexOf(bot);
+        const container = document.getElementById(`carte-${index}`);
+        if(!container) return;
+        
+        container.innerHTML = '';
+        bot.mano.forEach(() => {
+            container.appendChild(generaHtmlCarta(null, false));
+        });
+        
+        // Aggiorna punteggio (opzionale: nasconderlo per realismo?)
+        // Per debug lo lasciamo visibile
+        aggiornaInfoPunteggio(index);
+    }
+
+    function aggiornaPilaScartiGrafica() {
+        const divScarti = document.getElementById('pozzetto-scarti');
+        // Pulisce tutto tranne l'etichetta
+        const label = divScarti.querySelector('.etichetta-centro');
+        divScarti.innerHTML = '';
+        divScarti.appendChild(label);
+
+        if (pilaScarti.length > 0) {
+            const topCard = pilaScarti[pilaScarti.length - 1];
+            const el = generaHtmlCarta(topCard, true);
+            el.style.margin = '5px'; // Centratura
+            divScarti.appendChild(el);
+        }
+    }
+
+    function aggiornaInfoPunteggio(playerIndex) {
+        const el = document.getElementById(`score-${playerIndex}`);
+        if(el) el.innerText = `Pt: ${giocatori[playerIndex].punteggio}`;
+    }
+
+    function log(msg) {
+        const l = document.getElementById('log-partite');
+        l.innerHTML += `> ${msg}<br>`;
+        l.scrollTop = l.scrollHeight;
+        console.log(msg);
+    }
+
+    function finePartita(motivo) {
+        partitaFinita = true;
+        
+        // Calcola vincitore
+        let vincitore = null;
+        let maxScore = -1;
+        
+        giocatori.forEach(g => {
+            // Ricalcola per sicurezza
+            const s = calcolaPunteggio(g.mano);
+            if (s > maxScore) {
+                maxScore = s;
+                vincitore = g;
+            }
+        });
+
+        // Mostra overlay
+        const overlay = document.getElementById('messaggio-overlay');
+        const testo = document.getElementById('messaggio-testo');
+        overlay.style.display = 'flex';
+        testo.innerHTML = `${motivo}<br><span style="font-size:24px">Vince ${vincitore.nome} con ${maxScore} punti!</span>`;
+        
+        // Mostra le carte di tutti
+        giocatori.forEach((g, i) => {
+            if(i !== 0) { // L'umano le vede già
+                const container = document.getElementById(`carte-${i}`);
+                container.innerHTML = '';
+                g.mano.forEach(c => container.appendChild(generaHtmlCarta(c, true)));
+            }
         });
     }
-}
+
 </script>
 </body>
 </html>
