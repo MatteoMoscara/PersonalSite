@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trentuno (31) - Carte Napoletane</title>
+    <style>
+        :root {
+            --table-color: #2d5e38;
+            --card-width: 70px;
+            --card-height: 110px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #game-setup {
+            margin-top: 50px;
+            text-align: center;
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #game-table {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--table-color);
+            border: 10px solid #4a3c31;
+            border-radius: 20px;
+            position: relative;
+            height: 600px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
+        
+        /* Aree Giocatori */
+        .player-area {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 250px;
+        }
+        .top-player { top: 10px; left: 50%; transform: translateX(-50%); }
+        .left-player { top: 50%; left: -60px; transform: translateY(-50%) rotate(90deg); }
+        .right-player { top: 50%; right: -60px; transform: translateY(-50%) rotate(-90deg); }
+        .human-player { bottom: 20px; left: 50%; transform: translateX(-50%); width: 300px; }
+
+        .hand {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        /* Carte */
+        .card {
+            width: var(--card-width);
+            height: var(--card-height);
+            background-color: white;
+            border-radius: 8px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            cursor: default;
+            position: relative;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        .card.playable:hover { transform: translateY(-10px); cursor: pointer; border: 2px solid yellow; }
+        .card.selected { transform: translateY(-20px); border: 3px solid gold; }
+        .card-back {
+            background: repeating-linear-gradient(45deg, #b71c1c, #b71c1c 10px, #d32f2f 10px, #d32f2f 20px);
+            border: 2px solid white;
+        }
+        .suit-icon { font-size: 24px; }
+        .rank-text { font-size: 18px; }
+
+        /* Centro Tavolo */
+        #center-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .pile {
+            width: var(--card-width);
+            height: var(--card-height);
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .pile-label {
+            position: absolute;
+            bottom: -25px;
+            color: white;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px black;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Controlli */
+        #controls {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ffd700;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #b8860b;
+        }
+        button:active { transform: translateY(2px); box-shadow: 0 1px 0 #b8860b; }
+        button:disabled { background-color: #ccc; box-shadow: none; cursor: not-allowed; }
+
+        #log-area {
+            width: 100%;
+            max-width: 800px;
+            height: 100px;
+            background: #222;
+            overflow-y: scroll;
+            padding: 10px;
+            font-family: monospace;
+            border-top: 2px solid #555;
+            box-sizing: border-box;
+        }
+        .info-bubble {
+            background: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        .knocked { border: 3px solid red; }
+        .turn-active { background-color: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+        /* Colori Semi */
+        .suit-Denari { color: #d4a017; }
+        .suit-Coppe { color: #b71c1c; }
+        .suit-Spade { color: #2c3e50; }
+        .suit-Bastoni { color: #5d4037; }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-setup">
+        <h1>Trentuno 🇮🇹</h1>
+        <p>Scegli la difficoltà dei Bot:</p>
+        <select id="difficulty">
+            <option value="easy">Facile (Osteria)</option>
+            <option value="hard">Difficile (Professionista)</option>
+        </select>
+        <br><br>
+        <button onclick="startGame()">Inizia Partita</button>
+    </div>
+
+    <div id="game-table">
+        <div class="player-area top-player" id="p2">
+            <div class="info-bubble">Bot 2 <span class="score-display"></span></div>
+            <div class="hand"></div>
+        </div>
+        
+        <div class="player-area left-player" id="p1">
+            <div class="info-bubble">Bot 1 <span class="score-display"></span></div>
+            <div class="hand"></div>
+        </div>
+
+        <div class="player-area right-player" id="p3">
+            <div class="info-bubble">Bot 3 <span class="score-display"></span></div>
+            <div class="hand"></div>
+        </div>
+
+        <div id="center-area">
+            <div class="pile" id="deck" onclick="humanDrawDeck()">
+                <div class="card card-back"></div>
+                <span class="pile-label">MAZZO</span>
+            </div>
+            <div class="pile" id="discard-pile" onclick="humanDrawDiscard()">
+                <span class="pile-label">SCARTI</span>
+            </div>
+        </div>
+
+        <div class="player-area human-player" id="p0">
+            <div id="controls">
+                <button id="btn-knock" onclick="humanKnock()" disabled>✊ Bussa</button>
+                <button id="btn-restart" onclick="location.reload()" style="display:none; background-color: tomato;">Nuova Partita</button>
+            </div>
+            <div class="hand" id="human-hand"></div>
+            <div class="info-bubble">TU <span class="score-display" id="human-score"></span></div>
+            <p id="instruction" style="text-align: center; font-size: 14px; color: yellow;"></p>
+        </div>
+    </div>
+
+    <div id="log-area"></div>
+
+<script>
+/**
+ * LOGICA DEL GIOCO TRENTUNO
+ */
+
+const SUITS = ['Denari', 'Coppe', 'Spade', 'Bastoni'];
+const ICONS = {'Denari': '🟡', 'Coppe': '🍷', 'Spade': '⚔️', 'Bastoni': '🪵'};
+const RANKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // 8=Fante, 9=Cavallo, 10=Re
+const LABELS = {1:'A', 8:'F', 9:'C', 10:'R'};
+
+let deck = [];
+let discardPile = [];
+let players = [];
+let currentPlayerIndex = 0; // 0 è Umano
+let difficulty = 'easy';
+let gamePhase = 'draw'; // 'draw', 'discard', 'gameover'
+let knockerIndex = -1; // Chi ha bussato
+let roundAfterKnock = false;
+
+class Card {
+    constructor(suit, rank) {
+        this.suit = suit;
+        this.rank = rank;
+        this.value = this.calcValue();
+        this.label = LABELS[rank] || rank;
+    }
+
+    calcValue() {
+        if (this.rank === 1) return 11;
+        if (this.rank >= 8) return 10;
+        return this.rank;
+    }
+}
+
+class Player {
+    constructor(id, name, isBot) {
+        this.id = id;
+        this.name = name;
+        this.isBot = isBot;
+        this.hand = [];
+        this.score = 0;
+        this.lives = 3;
+    }
+
+    calculateScore() {
+        // Logica punteggio: Somma per seme o 30.5 per tris
+        let suitSums = { 'Denari': 0, 'Coppe': 0, 'Spade': 0, 'Bastoni': 0 };
+        let rankCounts = {};
+        
+        this.hand.forEach(c => {
+            suitSums[c.suit] += c.value;
+            rankCounts[c.rank] = (rankCounts[c.rank] || 0) + 1;
+        });
+
+        let maxSuitScore = Math.max(...Object.values(suitSums));
+        
+        // Controllo Tris (3 carte stesso valore) = 30.5
+        let isTris = Object.values(rankCounts).some(count => count === 3);
+        
+        if (isTris && maxSuitScore < 30.5) {
+            this.score = 30.5;
+        } else {
+            this.score = maxSuitScore;
+        }
+        return this.score;
+    }
+}
+
+function initDeck() {
+    deck = [];
+    for (let s of SUITS) {
+        for (let r of RANKS) {
+            deck.push(new Card(s, r));
+        }
+    }
+    shuffle(deck);
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function startGame() {
+    difficulty = document.getElementById('difficulty').value;
+    document.getElementById('game-setup').style.display = 'none';
+    document.getElementById('game-table').style.display = 'flex';
+    
+    initDeck();
+    
+    players = [
+        new Player(0, "Tu", false),
+        new Player(1, "Bot 1", true),
+        new Player(2, "Bot 2", true),
+        new Player(3, "Bot 3", true)
+    ];
+
+    // Distribuzione
+    for (let i = 0; i < 3; i++) {
+        players.forEach(p => p.hand.push(deck.pop()));
+    }
+
+    // Prima carta scarti
+    discardPile.push(deck.pop());
+
+    updateUI();
+    log("Partita iniziata! Tocca a te.");
+    
+    checkInstantWin();
+    
+    if(currentPlayerIndex === 0) {
+        enableHumanInput(true);
+    } else {
+        setTimeout(botTurn, 1000);
+    }
+}
+
+function updateUI() {
+    // Aggiorna scarti
+    const discardDiv = document.getElementById('discard-pile');
+    if (discardPile.length > 0) {
+        const topCard = discardPile[discardPile.length - 1];
+        discardDiv.innerHTML = renderCardHTML(topCard) + '<span class="pile-label">SCARTI</span>';
+    } else {
+        discardDiv.innerHTML = '<span class="pile-label">SCARTI (Vuoto)</span>';
+    }
+
+    // Aggiorna Giocatori
+    players.forEach(p => {
+        p.calculateScore();
+        const area = document.getElementById(`p${p.id}`);
+        const handDiv = area.querySelector('.hand');
+        const scoreSpan = area.querySelector('.score-display');
+        
+        // Evidenzia turno
+        if(currentPlayerIndex === p.id) area.classList.add('turn-active');
+        else area.classList.remove('turn-active');
+
+        // Bussa bordo
+        if(knockerIndex === p.id) area.querySelector('.info-bubble').classList.add('knocked');
+
+        handDiv.innerHTML = '';
+        
+        if (!p.isBot || gamePhase === 'gameover') {
+            // Mostra carte
+            p.hand.forEach((card, idx) => {
+                let div = document.createElement('div');
+                div.innerHTML = renderCardHTML(card);
+                div.className = 'card-wrapper';
+                // Se umano e fase scarto, rendi cliccabile
+                if (!p.isBot && gamePhase === 'discard' && currentPlayerIndex === 0) {
+                     div.onclick = () => humanDiscard(idx);
+                     div.firstChild.classList.add('playable');
+                }
+                handDiv.appendChild(div);
+            });
+            scoreSpan.innerText = `(${p.score})`;
+        } else {
+            // Carte coperte bot
+            p.hand.forEach(() => {
+                let div = document.createElement('div');
+                div.innerHTML = '<div class="card card-back"></div>';
+                handDiv.appendChild(div);
+            });
+            scoreSpan.innerText = '';
+        }
+    });
+
+    // Istruzioni
+    const instr = document.getElementById('instruction');
+    const btnKnock = document.getElementById('btn-knock');
+    
+    if (gamePhase === 'gameover') {
+        instr.innerText = "Partita Terminata. Vedi il vincitore sopra.";
+        btnKnock.disabled = true;
+    } else if (currentPlayerIndex === 0) {
+        if (gamePhase === 'draw') {
+            instr.innerText = "Tocca a te: Pesca dal mazzo o dagli scarti.";
+            btnKnock.disabled = (knockerIndex !== -1 || players[0].score < 20); // Regola minima per bussare
+            if(knockerIndex !== -1) instr.innerText += " (Ultimo turno!)";
+        } else {
+            instr.innerText = "Seleziona una carta dalla mano da scartare.";
+            btnKnock.disabled = true;
+        }
+    } else {
+        instr.innerText = `Sta giocando ${players[currentPlayerIndex].name}...`;
+        btnKnock.disabled = true;
+    }
+}
+
+function renderCardHTML(card) {
+    return `<div class="card suit-${card.suit}">
+                <div class="rank-text">${card.label}</div>
+                <div class="suit-icon">${ICONS[card.suit]}</div>
+            </div>`;
+}
+
+// --- LOGICA UMANO ---
+
+function humanDrawDeck() {
+    if (currentPlayerIndex !== 0 || gamePhase !== 'draw') return;
+    drawCard(0, 'deck');
+}
+
+function humanDrawDiscard() {
+    if (currentPlayerIndex !== 0 || gamePhase !== 'draw') return;
+    if (discardPile.length === 0) return;
+    drawCard(0, 'discard');
+}
+
+function humanDiscard(cardIndex) {
+    if (currentPlayerIndex !== 0 || gamePhase !== 'discard') return;
+    discardCard(0, cardIndex);
+}
+
+function humanKnock() {
+    if (currentPlayerIndex !== 0 || gamePhase !== 'draw') return;
+    if (knockerIndex !== -1) return; // Qualcuno ha già bussato
+    performKnock(0);
+}
+
+// --- AZIONI GENERICHE ---
+
+function drawCard(playerId, source) {
+    const p = players[playerId];
+    let card;
+    if (source === 'deck') {
+        if (deck.length === 0) refillDeck();
+        card = deck.pop();
+        log(`${p.name} pesca dal mazzo.`);
+    } else {
+        card = discardPile.pop();
+        log(`${p.name} pesca dagli scarti (${card.label} ${ICONS[card.suit]}).`);
+    }
+    p.hand.push(card);
+    gamePhase = 'discard';
+    updateUI();
+    
+    // Controllo 31 immediato dopo pescata (raro ma possibile)
+    if (p.calculateScore() === 31) {
+        handleWin31(playerId);
+        return;
+    }
+    
+    if (p.isBot) setTimeout(botDiscardLogic, 800);
+}
+
+function discardCard(playerId, cardIndex) {
+    const p = players[playerId];
+    const card = p.hand.splice(cardIndex, 1)[0];
+    discardPile.push(card);
+    log(`${p.name} scarta ${card.label} ${ICONS[card.suit]}.`);
+
+    // Controllo se ha fatto 31 DOPO aver scartato (mano pulita)
+    if (p.calculateScore() === 31) {
+        handleWin31(playerId);
+        return;
+    }
+
+    endTurn();
+}
+
+function performKnock(playerId) {
+    knockerIndex = playerId;
+    roundAfterKnock = true;
+    log(`✊ ${players[playerId].name} ha BUSSATO! Ultimo giro per gli altri.`);
+    endTurn();
+}
+
+function endTurn() {
+    gamePhase = 'draw';
+    
+    // Se siamo nel giro finale e torniamo a chi ha bussato, fine gioco
+    if (roundAfterKnock) {
+        let nextIdx = (currentPlayerIndex + 1) % 4;
+        if (nextIdx === knockerIndex) {
+            endGame();
+            return;
+        }
+    }
+
+    currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+    updateUI();
+
+    if (players[currentPlayerIndex].isBot) {
+        setTimeout(botTurn, 1000);
+    }
+}
+
+// --- LOGICA BOT ---
+
+function botTurn() {
+    const bot = players[currentPlayerIndex];
+    // Se qualcuno ha bussato, il bot non può bussare, deve giocare per salvarsi
+    
+    // 1. DECISIONE: BUSSARE?
+    // Se nessuno ha bussato e ho un buon punto (>27 hard, >25 easy), busso
+    if (knockerIndex === -1 && gamePhase === 'draw') {
+        let threshold = difficulty === 'hard' ? 27 : 25;
+        if (bot.calculateScore() >= threshold) {
+            performKnock(currentPlayerIndex);
+            return;
+        }
+    }
+
+    // 2. DECISIONE: PESCARE
+    // Valuta se la carta negli scarti è utile
+    let topDiscard = discardPile.length > 0 ? discardPile[discardPile.length - 1] : null;
+    let takeDiscard = false;
+
+    if (topDiscard) {
+        if (difficulty === 'hard') {
+            // Simula: se prendo lo scarto, il mio punteggio migliora?
+            let currentScore = bot.score; // Score attuale (con 3 carte)
+            // Logica semplificata hard: se lo scarto è dello stesso seme delle mie carte migliori o è alto
+            // Controlla se lo scarto aumenta il seme dominante
+            let suits = {};
+            bot.hand.forEach(c => suits[c.suit] = (suits[c.suit] || 0) + c.value);
+            let bestSuit = Object.keys(suits).reduce((a, b) => suits[a] > suits[b] ? a : b);
+            
+            if (topDiscard.suit === bestSuit && topDiscard.value > 5) takeDiscard = true;
+            // Se mi fa fare 30 o 31 prendo sicuro
+             if (topDiscard.value + suits[topDiscard.suit] >= 30) takeDiscard = true;
+        } else {
+            // Easy: prende se è dello stesso seme di una carta che ha e valore > 7
+            let hasSuit = bot.hand.some(c => c.suit === topDiscard.suit);
+            if (hasSuit && topDiscard.value > 7) takeDiscard = true;
+        }
+    }
+
+    if (takeDiscard) drawCard(currentPlayerIndex, 'discard');
+    else drawCard(currentPlayerIndex, 'deck');
+}
+
+function botDiscardLogic() {
+    const bot = players[currentPlayerIndex];
+    // Deve scartare la carta che lascia il punteggio più alto in mano
+    
+    let bestScore = -1;
+    let indexToRemove = 0;
+
+    // Prova a rimuovere ogni carta e vede quale combinazione da 3 carte dà score migliore
+    // Nota: ora ne ha 4 in mano
+    for (let i = 0; i < bot.hand.length; i++) {
+        let tempHand = [...bot.hand];
+        tempHand.splice(i, 1); // Rimuovi temporaneamente
+        let tempScore = calculateHandScoreExternal(tempHand);
+        if (tempScore > bestScore) {
+            bestScore = tempScore;
+            indexToRemove = i;
+        } else if (tempScore === bestScore) {
+            // A parità di punteggio, scarta quella con valore nominale più basso (per non regalare punti)
+            if (bot.hand[i].value < bot.hand[indexToRemove].value) {
+                indexToRemove = i;
+            }
+        }
+    }
+
+    discardCard(currentPlayerIndex, indexToRemove);
+}
+
+// Funzione helper per calcolare score di array carte arbitrary
+function calculateHandScoreExternal(handArr) {
+    let suitSums = { 'Denari': 0, 'Coppe': 0, 'Spade': 0, 'Bastoni': 0 };
+    let rankCounts = {};
+    handArr.forEach(c => {
+        suitSums[c.suit] += c.value;
+        rankCounts[c.rank] = (rankCounts[c.rank] || 0) + 1;
+    });
+    let max = Math.max(...Object.values(suitSums));
+    let isTris = Object.values(rankCounts).some(count => count === 3);
+    return (isTris && max < 30.5) ? 30.5 : max;
+}
+
+// --- GESTIONE FINE GIOCO ---
+
+function handleWin31(playerId) {
+    gamePhase = 'gameover';
+    updateUI();
+    let winner = players[playerId];
+    log(`🎉 ${winner.name} HA FATTO 31! PARTITA FINITA!`);
+    alert(`${winner.name} ha vinto con 31!`);
+    document.getElementById('btn-restart').style.display = 'block';
+}
+
+function endGame() {
+    gamePhase = 'gameover';
+    updateUI();
+    
+    // Calcola vincitori e perdenti
+    let scores = players.map(p => ({id: p.id, name: p.name, score: p.score}));
+    scores.sort((a, b) => b.score - a.score); // Ordine decrescente
+
+    let winner = scores[0];
+    let loser = scores[scores.length - 1];
+
+    // Gestione pareggi in basso (chi perde la vita)
+    let lowestScore = loser.score;
+    let losers = scores.filter(s => s.score === lowestScore);
+    
+    let msg = "Fine Round! Risultati:\n";
+    scores.forEach(s => msg += `${s.name}: ${s.score}\n`);
+    
+    if (losers.length > 1) {
+        msg += `\nPareggio per l'ultimo posto tra: ${losers.map(l=>l.name).join(', ')}.`;
+    } else {
+        msg += `\n💀 ${loser.name} ha il punteggio più basso!`;
+    }
+
+    log("--- CLASSIFICA ---");
+    scores.forEach(s => log(`${s.name}: ${s.score}`));
+    
+    setTimeout(() => alert(msg), 500);
+    document.getElementById('btn-restart').style.display = 'block';
+}
+
+function checkInstantWin() {
+    // Controllo 31 servito all'inizio
+    for(let p of players) {
+        if(p.calculateScore() === 31) {
+            handleWin31(p.id);
+            break;
+        }
+    }
+}
+
+function refillDeck() {
+    // Se il mazzo finisce, mescola gli scarti
+    if (discardPile.length <= 1) return; // Non si può
+    log("Il mazzo è finito! Mescolo gli scarti.");
+    let top = discardPile.pop();
+    while (discardPile.length > 0) {
+        deck.push(discardPile.pop());
+    }
+    shuffle(deck);
+    discardPile.push(top);
+}
+
+function log(msg) {
+    const box = document.getElementById('log-area');
+    const p = document.createElement('div');
+    p.innerText = `> ${msg}`;
+    box.appendChild(p);
+    box.scrollTop = box.scrollHeight;
+}
+</script>
+
+</body>
+</html>
