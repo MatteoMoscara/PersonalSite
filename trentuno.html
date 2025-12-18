@@ -3,174 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trentuno - Napoletane</title>
+    <title>Trentuno Napoletano</title>
     <style>
         :root {
-            --bg-color: #1e3c23; /* Panno verde scuro */
-            --card-w: 70px;
-            --card-h: 110px;
+            --bg-color: #2e7d32;
+            --card-w: 75px;
+            --card-h: 120px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #111;
-            margin: 0;
-            overflow: hidden; /* Blocca scroll */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #1a1a1a;
             color: white;
+            margin: 0;
+            overflow: hidden;
             user-select: none;
+            touch-action: manipulation;
         }
 
-        /* --- SCHERMATE (Setup, Passaggio, GameOver) --- */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .hidden { display: none !important; }
-
-        h1 { color: #ffd700; margin-bottom: 20px; text-shadow: 2px 2px 0 #000; }
-        
-        .setup-box { background: #333; padding: 20px; border-radius: 10px; border: 1px solid #555; width: 90%; max-width: 400px; }
-        label { display: block; margin-top: 15px; text-align: left; }
-        select, button { width: 100%; padding: 12px; margin-top: 5px; font-size: 16px; border-radius: 5px; border: none; }
-        button { background: #d32f2f; color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        button:hover { background: #b71c1c; }
-        
-        .pass-msg { font-size: 24px; color: #ffd700; margin-bottom: 20px; }
-
-        /* --- TAVOLO DA GIOCO --- */
+        /* --- LAYOUT GENERALE --- */
         #game-area {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle, #2e7d32 0%, #1b5e20 100%);
-            display: none; /* Attivato da JS */
+            background: radial-gradient(circle, #388e3c 0%, #1b5e20 100%);
+            display: none;
         }
 
-        /* --- DISPOSIZIONE GIOCATORI --- */
-        /* Il giocatore attivo è sempre in basso (Bottom) */
-        .active-player-zone {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 10;
-        }
-
-        /* Gli avversari sono in alto in una griglia */
-        .opponents-container {
-            position: absolute;
-            top: 10px;
-            left: 0;
-            width: 100%;
-            height: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 10px;
-            pointer-events: none; /* Non cliccabili */
-        }
-
-        .opponent {
-            background: rgba(0,0,0,0.4);
-            padding: 5px;
-            border-radius: 10px;
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center;
-            width: 80px;
-            transition: all 0.3s;
         }
-        .opponent.turn-active { border: 2px solid #ffd700; background: rgba(255, 215, 0, 0.2); }
-        .opponent.knocked { border: 2px solid red; background: rgba(255, 0, 0, 0.2); }
-        .opponent.eliminated { opacity: 0.3; filter: grayscale(100%); }
+        .hidden { display: none !important; }
 
-        .mini-hand { display: flex; justify-content: center; margin-top: 5px; height: 30px; }
-        .mini-card { width: 15px; height: 24px; background: white; border-radius: 2px; margin: 0 1px; border: 1px solid #ccc;}
+        /* Setup Box */
+        .box { background: #333; padding: 25px; border-radius: 15px; border: 2px solid #555; max-width: 400px; width: 90%; }
+        select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; font-size: 16px; border: none; }
+        button { background: #d32f2f; color: white; font-weight: bold; cursor: pointer; }
+        button:hover { background: #b71c1c; }
+
+        /* --- ZONE TAVOLO --- */
         
-        /* --- CARTE REALI --- */
+        /* Avversari (Alto) */
+        .opponents-row {
+            position: absolute; top: 10px; left: 0; width: 100%;
+            display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+            pointer-events: none;
+        }
+        .opponent {
+            background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 10px;
+            text-align: center; min-width: 70px; transition: 0.3s;
+        }
+        .opponent.active { border: 2px solid #ffd700; background: rgba(255, 215, 0, 0.3); transform: scale(1.1); }
+        .opponent.knocked { border: 2px solid red; background: rgba(255, 0, 0, 0.4); }
+        .mini-cards { display: flex; justify-content: center; margin-top: 5px; }
+        .mini-card-icon { width: 12px; height: 18px; background: white; border-radius: 2px; margin: 0 1px; }
+
+        /* Centro (Mazzo/Scarti) */
+        .center-table {
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; gap: 40px;
+        }
+        .pile {
+            width: var(--card-w); height: var(--card-h);
+            border-radius: 8px; position: relative; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .pile-label {
+            position: absolute; bottom: -25px; width: 100%; text-align: center;
+            font-size: 12px; font-weight: bold; text-shadow: 1px 1px 2px black;
+        }
+
+        /* Giocatore Attuale (Basso) */
+        .player-zone {
+            position: absolute; bottom: 10px; left: 0; width: 100%;
+            display: flex; flex-direction: column; align-items: center;
+        }
         .hand-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            height: 140px;
-            margin: 10px 0;
-            perspective: 1000px;
+            display: flex; justify-content: center; gap: 10px; height: 130px; margin-bottom: 10px;
+        }
+        .controls { display: flex; gap: 15px; margin-bottom: 5px; }
+        .btn-game { padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; border: 2px solid white; }
+        .btn-knock { background: #ff9800; color: black; }
+        .btn-knock:disabled { background: #555; color: #888; border-color: #555; cursor: not-allowed; }
+
+        /* --- CARTE & ANIMAZIONI --- */
+        .card {
+            width: var(--card-w); height: var(--card-h);
+            background-color: white; border-radius: 8px;
+            background-size: 100% 100%; background-repeat: no-repeat;
+            box-shadow: -2px 2px 6px rgba(0,0,0,0.4);
+            position: relative;
+            /* Per il testo fallback */
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; color: black; font-weight: bold; text-align: center;
         }
         
-        .card {
-            width: var(--card-w);
-            height: var(--card-h);
-            background-color: white;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
-            box-shadow: -2px 2px 5px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
-            position: relative;
+        .card-img {
+            width: 100%; height: 100%; position: absolute; top:0; left:0; border-radius: 8px;
         }
+
         .card-back {
-            background-image: url('https://raw.githubusercontent.com/kaizhu256/react-scopa/master/src/assets/cards/1B.png'); /* Fallback decorativo */
             background: repeating-linear-gradient(45deg, #b71c1c, #b71c1c 10px, #d32f2f 10px, #d32f2f 20px);
             border: 2px solid #fff;
         }
-        /* Quando è il turno di scartare, le carte saltellano al passaggio del mouse */
-        .playable:hover { transform: translateY(-20px); cursor: pointer; border: 2px solid yellow; }
 
-        /* --- CENTRO TAVOLA --- */
-        .center-table {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            z-index: 5;
-        }
-        .pile {
-            width: var(--card-w);
-            height: var(--card-h);
-            border-radius: 8px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
-            position: relative;
-        }
-        .pile-label {
-            position: absolute; bottom: -25px; font-size: 12px; font-weight: bold; text-shadow: 1px 1px 2px black;
-        }
-        #deck { border: 2px solid rgba(255,255,255,0.5); background: repeating-linear-gradient(45deg, #b71c1c, #b71c1c 10px, #d32f2f 10px, #d32f2f 20px); }
-        #discard { border: 2px dashed rgba(255,255,255,0.3); background-color: rgba(0,0,0,0.2); background-size: cover; background-position: center;}
-        
-        /* --- HUD --- */
-        .hud-info { text-align: center; text-shadow: 1px 1px 2px black; }
-        .lives { color: #ff5252; font-size: 1.2em; }
-        .status-text { color: #ffd700; font-style: italic; font-size: 0.9em; min-height: 20px;}
+        .playable { cursor: pointer; transition: transform 0.2s; }
+        .playable:hover { transform: translateY(-20px); border: 2px solid yellow; z-index: 10;}
 
-        /* Bottoni Azione */
-        .controls { display: flex; gap: 15px; margin-bottom: 10px; }
-        .btn-game { padding: 10px 20px; border-radius: 30px; border: 2px solid white; font-weight: bold; cursor: pointer; }
-        .btn-knock { background: #ff9800; color: black; }
-        .btn-knock:disabled { background: #555; border-color: #777; color: #888; cursor: not-allowed;}
+        /* Animazione Pesca */
+        @keyframes dealIn {
+            0% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .deal-anim { animation: dealIn 0.4s ease-out forwards; }
 
-        /* LOG */
-        #log-container {
-            position: absolute; bottom: 0; left: 0;
-            width: 100%; height: 100px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            pointer-events: none;
-            overflow: hidden;
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 10px; box-sizing: border-box;
-            font-size: 13px; color: #ccc;
+        /* Log */
+        #log {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 30px;
+            background: rgba(0,0,0,0.8); color: #ccc; font-size: 12px;
+            display: flex; align-items: center; padding-left: 10px; pointer-events: none;
         }
 
     </style>
@@ -178,21 +133,19 @@
 <body>
 
     <div id="setup-screen" class="overlay">
-        <div class="setup-box">
-            <h1>Trentuno 🇮🇹</h1>
-            
+        <div class="box">
+            <h1 style="color:#ffd700">Trentuno 🇮🇹</h1>
             <label>Giocatori Umani:</label>
-            <select id="sel-humans">
+            <select id="n-humans">
                 <option value="1">1 (Solo contro Bot)</option>
-                <option value="2">2 (Amici Locali)</option>
+                <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
                 <option value="6">6</option>
             </select>
-
-            <label>Bot (CPU):</label>
-            <select id="sel-bots">
+            <label>Numero Bot:</label>
+            <select id="n-bots">
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -200,86 +153,86 @@
                 <option value="4">4</option>
                 <option value="5">5</option>
             </select>
-
-            <button onclick="startGame()">INIZIA PARTITA</button>
-            <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Max 6 giocatori totali.</p>
+            <button onclick="initGame()">INIZIA PARTITA</button>
         </div>
     </div>
 
     <div id="pass-screen" class="overlay hidden">
-        <div class="pass-msg">Tocca a <span id="next-player-name"></span></div>
-        <p>Passa il dispositivo al giocatore.</p>
-        <button onclick="revealTurn()">SONO PRONTO</button>
+        <div class="box">
+            <h2 style="color:#ffd700">Tocca a <span id="pass-name"></span></h2>
+            <p>Passa il dispositivo al giocatore.</p>
+            <button onclick="confirmPass()">SONO PRONTO</button>
+        </div>
     </div>
 
     <div id="game-area">
         
-        <div class="opponents-container" id="opponents-area">
-            </div>
+        <div class="opponents-row" id="opponents-div"></div>
 
         <div class="center-table">
-            <div class="pile" id="deck" onclick="humanAction('deck')">
+            <div class="pile card-back" id="deck" onclick="userDraw('deck')">
                 <div class="pile-label">MAZZO</div>
             </div>
-            <div class="pile" id="discard" onclick="humanAction('discard')">
+            <div class="pile" id="discard" onclick="userDraw('discard')" style="border: 2px dashed rgba(255,255,255,0.3)">
                 <div class="pile-label">SCARTI</div>
             </div>
         </div>
 
-        <div class="active-player-zone" id="active-zone">
+        <div class="player-zone">
             <div class="controls">
-                <button class="btn-game btn-knock" id="btn-knock" onclick="humanKnock()">✊ BUSSA</button>
+                <button class="btn-game btn-knock" id="btn-knock" onclick="userKnock()" disabled>✊ BUSSA</button>
             </div>
             
-            <div class="hand-container" id="my-hand">
-                </div>
-
-            <div class="hud-info">
-                <div style="font-size: 1.2em; font-weight: bold;"><span id="my-name">TU</span> <span id="my-score" style="color:#aaa"></span></div>
-                <div class="lives" id="my-lives">❤️❤️❤️</div>
-                <div class="status-text" id="status-text">Attendi il tuo turno...</div>
+            <div class="hand-container" id="player-hand"></div>
+            
+            <div style="text-align: center; text-shadow: 1px 1px 2px black;">
+                <span id="p-name" style="font-weight:bold; font-size:1.2em">TU</span> 
+                <span id="p-score" style="color:#aaa; font-size:0.9em"></span>
+                <div id="p-lives" style="color:#ff5252; margin-top:2px">❤️❤️❤️</div>
+                <div id="status-msg" style="color:#ffd700; font-size:0.9em; margin-top:5px">...</div>
             </div>
         </div>
 
-        <div id="log-container"></div>
+        <div id="log">Benvenuto a Trentuno!</div>
     </div>
 
 <script>
-/* * LOGICA DI GIOCO - TRENTUNO V3
- * Fix: Rendering dinamico, Bot Delay, Immagini corrette.
+/**
+ * TRENTUNO - V4
+ * Logica corretta, Animazioni, Fallback Immagini
  */
 
-// --- CONFIG ---
-const CARD_URL = "https://raw.githubusercontent.com/kaizhu256/react-scopa/master/src/assets/cards/";
+// URL Immagini (Repo affidabile)
+const CARD_BASE = "https://raw.githubusercontent.com/kaizhu256/react-scopa/master/src/assets/cards/";
 const SUITS = ['B', 'C', 'D', 'S']; // Bastoni, Coppe, Denari, Spade
 const RANKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; 
 
-// --- STATE ---
+// STATO
 let players = [];
 let deck = [];
 let discardPile = [];
-let currentPlayerIdx = 0;
-let knockerIdx = -1; // -1 se nessuno ha bussato
-let phase = 'setup'; // setup, draw, discard, result
-let roundStarter = 0;
+let turnIdx = 0;
+let knockerIdx = -1;
+let phase = 'draw'; // draw, discard
+let roundStartPlayer = 0;
 
 class Player {
     constructor(id, name, isBot) {
         this.id = id;
         this.name = name;
         this.isBot = isBot;
-        this.hand = [];
         this.lives = 3;
+        this.hand = [];
         this.eliminated = false;
         this.score = 0;
     }
 
-    calculateScore() {
-        let sums = { 'B': 0, 'C': 0, 'D': 0, 'S': 0 };
+    calcScore() {
+        let sums = { 'B':0, 'C':0, 'D':0, 'S':0 };
         this.hand.forEach(c => {
             let val = c.rank;
-            if (val === 1) val = 11;
-            else if (val >= 8) val = 10;
+            if(val === 1) val = 11;
+            else if(val >= 8) val = 10;
             sums[c.suit] += val;
         });
         this.score = Math.max(...Object.values(sums));
@@ -287,414 +240,321 @@ class Player {
     }
 }
 
-// --- INIT ---
-function startGame() {
-    const nHumans = parseInt(document.getElementById('sel-humans').value);
-    const nBots = parseInt(document.getElementById('sel-bots').value);
-    
-    if (nHumans + nBots < 2) { alert("Minimo 2 giocatori!"); return; }
-    if (nHumans + nBots > 6) { alert("Massimo 6 giocatori totali!"); return; }
+function initGame() {
+    let h = parseInt(document.getElementById('n-humans').value);
+    let b = parseInt(document.getElementById('n-bots').value);
+    if(h+b < 2 || h+b > 6) { alert("Giocatori totali tra 2 e 6."); return; }
 
     players = [];
-    let idCounter = 0;
-    
-    // Crea Umani
-    for(let i=0; i<nHumans; i++) {
-        players.push(new Player(idCounter++, `Giocatore ${i+1}`, false));
-    }
-    // Crea Bot
-    for(let i=0; i<nBots; i++) {
-        players.push(new Player(idCounter++, `Bot ${i+1}`, true));
-    }
+    let c = 0;
+    for(let i=0; i<h; i++) players.push(new Player(c++, `Giocatore ${i+1}`, false));
+    for(let i=0; i<b; i++) players.push(new Player(c++, `Bot ${i+1}`, true));
 
     document.getElementById('setup-screen').classList.add('hidden');
     document.getElementById('game-area').style.display = 'block';
-
+    
     startRound();
 }
 
 function startRound() {
-    // 1. Reset Variabili
-    deck = createDeck();
-    discardPile = [];
+    // 1. Reset
     knockerIdx = -1;
     phase = 'draw';
+    deck = [];
+    discardPile = [];
     
-    // 2. Controllo Vincitore Torneo
-    let survivors = players.filter(p => !p.eliminated);
-    if(survivors.length < 2) {
-        alert(`🏆 ${survivors[0].name} HA VINTO TUTTO!`);
-        location.reload();
-        return;
-    }
-
-    // 3. Distribuzione
-    survivors.forEach(p => p.hand = []);
-    for(let i=0; i<3; i++) {
-        survivors.forEach(p => p.hand.push(deck.pop()));
-    }
-    discardPile.push(deck.pop()); // Prima carta a terra
-
-    // 4. Imposta Primo Giocatore
-    currentPlayerIdx = roundStarter;
-    while(players[currentPlayerIdx].eliminated) {
-        currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-    }
-
-    log("--- NUOVO ROUND ---");
-    checkInstantWin(); // Controllo 31 servito
-    processTurn();
-}
-
-function createDeck() {
-    let d = [];
+    // 2. Crea Mazzo
     SUITS.forEach(s => {
         RANKS.forEach(r => {
-            d.push({
-                suit: s, rank: r,
-                img: `${CARD_URL}${r}${s}.png`
+            deck.push({ 
+                suit:s, rank:r, 
+                img: `${CARD_BASE}${r}${s}.png`,
+                txt: `${r} ${s}`
             });
         });
     });
-    // Shuffle Fisher-Yates
-    for (let i = d.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [d[i], d[j]] = [d[j], d[i]];
-    }
-    return d;
+    // Shuffle
+    deck.sort(() => Math.random() - 0.5);
+
+    // 3. Distribuisci
+    let active = players.filter(p => !p.eliminated);
+    if(active.length < 2) { alert(`🏆 ${active[0].name} VINCE TUTTO!`); location.reload(); return; }
+
+    active.forEach(p => p.hand = []);
+    for(let i=0; i<3; i++) active.forEach(p => p.hand.push(deck.pop()));
+    
+    discardPile.push(deck.pop());
+
+    // 4. Imposta turno
+    turnIdx = roundStartPlayer;
+    while(players[turnIdx].eliminated) turnIdx = (turnIdx + 1) % players.length;
+
+    render();
+    nextTurn();
 }
 
-// --- TURN LOGIC ---
-function processTurn() {
-    renderTable(); // Aggiorna grafica
-    
-    const p = players[currentPlayerIdx];
-    
-    // Controllo fine giro dopo bussata
-    if (knockerIdx !== -1 && currentPlayerIdx === knockerIdx) {
-        endRoundCalculations();
+function nextTurn() {
+    let p = players[turnIdx];
+
+    // Controllo fine giro post-bussata
+    if(knockerIdx !== -1 && turnIdx === knockerIdx) {
+        endRound();
         return;
     }
 
-    // Se giocatore eliminato (caso raro di sicurezza), salta
-    if (p.eliminated) {
+    if(p.eliminated) {
         passTurn();
         return;
     }
 
-    // Se è Umano
-    if (!p.isBot) {
-        // Se c'è più di un umano nel gioco, nascondi lo schermo per il passaggio
-        const humansActive = players.filter(pl => !pl.isBot && !pl.eliminated).length;
-        if (humansActive > 1 && document.getElementById('pass-screen').classList.contains('hidden')) {
-             document.getElementById('next-player-name').innerText = p.name;
+    // Se Umano
+    if(!p.isBot) {
+        let humansAlive = players.filter(x => !x.isBot && !x.eliminated).length;
+        // Se c'è più di un umano e siamo nel cambio turno, mostra schermata pass
+        // Nota: controllo semplice per evitare schermata pass se è l'unico umano
+        if(humansAlive > 1 && document.getElementById('pass-screen').classList.contains('hidden')) {
+             document.getElementById('pass-name').innerText = p.name;
              document.getElementById('pass-screen').classList.remove('hidden');
-             // Quando clicca "Sono Pronto", renderTable verrà richiamato
         } else {
-            // Unico umano o schermo già passato
-            updateInstruction("Tocca a te! Pesca dal Mazzo o dagli Scarti.");
+            msg(`Tocca a te, ${p.name}`);
+            render();
         }
     } 
-    // Se è Bot
+    // Se Bot
     else {
-        updateInstruction(`${p.name} sta pensando...`);
-        // Ritardo per simulare pensiero (2 secondi)
-        setTimeout(() => botLogic(p), 2000);
+        msg(`${p.name} sta pensando...`);
+        render();
+        setTimeout(botPlay, 1000); // 1 Secondo di attesa
     }
 }
 
-function revealTurn() {
+function confirmPass() {
     document.getElementById('pass-screen').classList.add('hidden');
-    renderTable();
+    render();
 }
 
-// --- HUMAN ACTIONS ---
-function humanAction(source) {
-    const p = players[currentPlayerIdx];
-    if (p.isBot || phase !== 'draw') return;
+// LOGICA UMANO
+function userDraw(source) {
+    let p = players[turnIdx];
+    if(p.isBot || phase !== 'draw') return;
 
-    if (source === 'deck') {
+    if(source === 'deck') {
         if(deck.length===0) refillDeck();
         p.hand.push(deck.pop());
-        log("Hai pescato dal mazzo.");
     } else {
         if(discardPile.length===0) return;
         p.hand.push(discardPile.pop());
-        log("Hai pescato dagli scarti.");
     }
-
+    
     phase = 'discard';
-    renderTable();
-    updateInstruction("Seleziona una carta da scartare.");
-
-    if (p.calculateScore() === 31) {
-        setTimeout(() => { alert("HAI FATTO 31!"); endRoundCalculations(p.id); }, 100);
-    }
+    msg("Seleziona una carta da scartare");
+    render();
+    
+    if(p.calcScore()===31) setTimeout(() => { alert("31!"); endRound(p.id); }, 100);
 }
 
-function humanDiscard(cardIdx) {
-    const p = players[currentPlayerIdx];
-    if (p.isBot || phase !== 'discard') return;
+function userDiscard(idx) {
+    let p = players[turnIdx];
+    if(p.isBot || phase !== 'discard') return;
 
-    let card = p.hand.splice(cardIdx, 1)[0];
-    discardPile.push(card);
-    log(`Hai scartato ${card.rank} di ${card.suit}.`);
+    let c = p.hand.splice(idx, 1)[0];
+    discardPile.push(c);
     
-    if (p.calculateScore() === 31) {
-        setTimeout(() => { alert("HAI FATTO 31!"); endRoundCalculations(p.id); }, 100);
+    if(p.calcScore()===31) {
+        render();
+        setTimeout(() => { alert("31!"); endRound(p.id); }, 100);
     } else {
         passTurn();
     }
 }
 
-function humanKnock() {
-    const p = players[currentPlayerIdx];
-    if (p.isBot || phase !== 'draw' || knockerIdx !== -1) return;
-    
-    if (p.calculateScore() < 20) {
-        alert("Punteggio troppo basso per bussare!");
-        return;
-    }
+function userKnock() {
+    let p = players[turnIdx];
+    if(p.isBot || phase !== 'draw' || knockerIdx !== -1) return;
+    if(p.calcScore() < 20) { alert("Serve almeno 20 per bussare!"); return; }
 
-    knockerIdx = currentPlayerIdx;
-    log(`${p.name} HA BUSSATO! ✊`);
-    alert("Hai bussato! Ultimo giro per gli altri.");
+    knockerIdx = turnIdx;
+    alert("Hai bussato!");
     passTurn();
 }
 
-// --- BOT LOGIC ---
-function botLogic(bot) {
-    // 1. Decide se bussare
-    let score = bot.calculateScore();
-    if (knockerIdx === -1 && phase === 'draw' && score >= 26) {
-        knockerIdx = currentPlayerIdx;
-        log(`${bot.name} HA BUSSATO! ✊`);
+// LOGICA BOT
+function botPlay() {
+    let p = players[turnIdx];
+    let score = p.calcScore();
+
+    // 1. Bussa?
+    if(knockerIdx === -1 && phase === 'draw' && score >= 25) {
+        knockerIdx = turnIdx;
+        msg(`${p.name} HA BUSSATO!`);
         passTurn();
         return;
     }
 
     // 2. Pesca
-    let topDiscard = discardPile[discardPile.length-1];
-    let wantsDiscard = false;
+    let top = discardPile[discardPile.length-1];
+    let takeDiscard = false;
     
-    // Logica semplice: se lo scarto è dello stesso seme delle mie carte e valore alto
-    if (topDiscard) {
-        let suitPoints = { 'B':0, 'C':0, 'D':0, 'S':0 };
-        bot.hand.forEach(c => suitPoints[c.suit] += (c.rank >=8 ? 10 : (c.rank===1?11:c.rank)));
-        // Se la carta a terra è un Asso o Figura e corrisponde al mio seme migliore
-        let bestSuit = Object.keys(suitPoints).reduce((a,b)=>suitPoints[a]>suitPoints[b]?a:b);
-        if (topDiscard.suit === bestSuit && (topDiscard.rank===1 || topDiscard.rank>=8)) {
-            wantsDiscard = true;
-        }
+    // Logica base: se lo scarto migliora il seme migliore
+    if(top) {
+        let suits = {'B':0,'C':0,'D':0,'S':0};
+        p.hand.forEach(c => suits[c.suit] += (c.rank>=8?10:c.rank));
+        let bestSuit = Object.keys(suits).reduce((a,b)=>suits[a]>suits[b]?a:b);
+        if(top.suit === bestSuit && (top.rank===1 || top.rank>=8)) takeDiscard = true;
     }
 
-    if (wantsDiscard) {
-        bot.hand.push(discardPile.pop());
-        log(`${bot.name} pesca dagli scarti.`);
+    if(takeDiscard) {
+        p.hand.push(discardPile.pop());
     } else {
         if(deck.length===0) refillDeck();
-        bot.hand.push(deck.pop());
-        log(`${bot.name} pesca dal mazzo.`);
+        p.hand.push(deck.pop());
     }
 
-    // Pausa prima di scartare (2 secondi)
+    // 3. Scarta (dopo breve pausa per animazione mentale)
     setTimeout(() => {
-        // 3. Scarta
-        let bestHandScore = -1;
-        let discardIndex = 0;
+        let bestScore = -1;
+        let discardIdx = 0;
         
-        // Simula quale scarto lascia la mano migliore
         for(let i=0; i<4; i++) {
-            let tempHand = [...bot.hand];
-            tempHand.splice(i, 1);
-            let s = calcTempScore(tempHand);
-            // A parità di punteggio, scarta quella di valore più basso (non regala figure)
-            if (s > bestHandScore || (s === bestHandScore && bot.hand[i].rank < bot.hand[discardIndex].rank)) {
-                bestHandScore = s;
-                discardIndex = i;
+            let tmp = [...p.hand];
+            tmp.splice(i,1);
+            let s = calcTmp(tmp);
+            if(s > bestScore || (s===bestScore && p.hand[i].rank < p.hand[discardIdx].rank)) {
+                bestScore = s;
+                discardIdx = i;
             }
         }
-
-        let c = bot.hand.splice(discardIndex, 1)[0];
-        discardPile.push(c);
-        log(`${bot.name} scarta una carta.`);
-
-        if (bestHandScore === 31) {
-            alert(`${bot.name} HA FATTO 31!`);
-            endRoundCalculations(bot.id);
+        
+        discardPile.push(p.hand.splice(discardIdx, 1)[0]);
+        
+        if(bestScore === 31) {
+            msg(`${p.name} fa 31!`);
+            endRound(p.id);
         } else {
             passTurn();
         }
-
-    }, 2000); 
+    }, 1000); // Altro secondo per scarto
 }
 
 function passTurn() {
     phase = 'draw';
     do {
-        currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-    } while (players[currentPlayerIdx].eliminated);
-    
-    processTurn();
+        turnIdx = (turnIdx + 1) % players.length;
+    } while(players[turnIdx].eliminated);
+    nextTurn();
 }
 
-// --- UTILS ---
-function calcTempScore(h) {
-    let sums = { 'B': 0, 'C': 0, 'D': 0, 'S': 0 };
-    h.forEach(c => {
-        let val = c.rank;
-        if (val === 1) val = 11;
-        else if (val >= 8) val = 10;
-        sums[c.suit] += val;
-    });
-    return Math.max(...Object.values(sums));
-}
-
-function refillDeck() {
-    if (discardPile.length < 2) return;
-    let top = discardPile.pop();
-    while(discardPile.length > 0) deck.push(discardPile.pop());
-    // Shuffle
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    discardPile.push(top);
-    log("Mazzo rimescolato.");
-}
-
-function checkInstantWin() {
-    players.forEach(p => {
-        if(!p.eliminated && p.calculateScore() === 31) {
-            alert(`${p.name} HA 31 SERVITO!`);
-            endRoundCalculations(p.id);
-        }
-    });
-}
-
-function endRoundCalculations(instantWinnerId = null) {
+// FINE ROUND
+function endRound(instantWinnerId = null) {
     let active = players.filter(p => !p.eliminated);
-    let msg = "RISULTATI ROUND:\n";
+    let txt = "RISULTATI:\n";
     let losers = [];
 
-    active.forEach(p => msg += `${p.name}: ${p.calculateScore()}\n`);
+    active.forEach(p => txt += `${p.name}: ${p.calcScore()}\n`);
 
-    if (instantWinnerId !== null) {
+    if(instantWinnerId !== null) {
         losers = active.filter(p => p.id !== instantWinnerId);
-        msg += `\n${players.find(p=>p.id===instantWinnerId).name} vince con 31!`;
+        txt += `\n${players.find(p=>p.id===instantWinnerId).name} vince con 31!`;
     } else {
-        let minScore = Math.min(...active.map(p => p.score));
-        losers = active.filter(p => p.score === minScore);
-        msg += `\nPunteggio più basso: ${minScore}`;
+        let min = Math.min(...active.map(p => p.score));
+        losers = active.filter(p => p.score === min);
+        txt += `\nPunteggio più basso: ${min}`;
     }
 
     losers.forEach(p => {
         p.lives--;
-        if(p.lives <= 0) {
-            p.lives = 0;
-            p.eliminated = true;
-        }
+        if(p.lives <= 0) { p.lives = 0; p.eliminated = true; }
     });
 
-    alert(msg);
-    roundStarter = (roundStarter + 1) % players.length;
+    alert(txt);
+    roundStartPlayer = (roundStartPlayer + 1) % players.length;
     startRound();
 }
 
-function updateInstruction(txt) {
-    document.getElementById('status-text').innerText = txt;
+// UTILITIES
+function calcTmp(h) {
+    let s={B:0,C:0,D:0,S:0};
+    h.forEach(c=>{ let v=c.rank===1?11:(c.rank>=8?10:c.rank); s[c.suit]+=v; });
+    return Math.max(...Object.values(s));
 }
 
-function log(txt) {
-    let div = document.createElement('div');
-    div.innerText = "> " + txt;
-    document.getElementById('log-container').prepend(div);
+function refillDeck() {
+    if(discardPile.length<2) return;
+    let top = discardPile.pop();
+    while(discardPile.length>0) deck.push(discardPile.pop());
+    deck.sort(() => Math.random() - 0.5);
+    discardPile.push(top);
+    msg("Mazzo rimescolato");
 }
 
-// --- RENDERING SYSTEM (FIXED) ---
-function renderTable() {
-    // 1. Render Active Player (Bottom)
-    const activeP = players[currentPlayerIdx];
-    const isHumanActive = !activeP.isBot && document.getElementById('pass-screen').classList.contains('hidden');
-    
-    // Aggiorna HUD Basso
-    document.getElementById('my-name').innerText = activeP.name;
-    document.getElementById('my-lives').innerText = '❤️'.repeat(activeP.lives);
-    document.getElementById('my-score').innerText = isHumanActive ? `(${activeP.calculateScore()})` : '';
-    
-    // Bottone Bussa
-    const btnKnock = document.getElementById('btn-knock');
-    if (isHumanActive && phase === 'draw' && knockerIdx === -1 && activeP.calculateScore() >= 20) {
-        btnKnock.disabled = false;
-    } else {
-        btnKnock.disabled = true;
-    }
+function msg(t) { document.getElementById('status-msg').innerText = t; }
 
-    // Carte in mano (Active)
-    const handDiv = document.getElementById('my-hand');
-    handDiv.innerHTML = '';
-    
-    // Mostra carte solo se è umano e non siamo nella schermata di passaggio
-    if (isHumanActive) {
-        activeP.hand.forEach((card, idx) => {
-            let div = document.createElement('div');
-            div.className = 'card ' + (phase === 'discard' ? 'playable' : '');
-            div.style.backgroundImage = `url('${card.img}')`;
-            if (phase === 'discard') {
-                div.onclick = () => humanDiscard(idx);
-            }
-            handDiv.appendChild(div);
-        });
-    } else {
-        // Se è Bot o schermata passaggio, mostra dorso o vuoto
-        activeP.hand.forEach(() => {
-            let div = document.createElement('div');
-            div.className = 'card card-back';
-            handDiv.appendChild(div);
-        });
-    }
+// RENDER
+function render() {
+    let p = players[turnIdx];
+    let isHumanTurn = !p.isBot && document.getElementById('pass-screen').classList.contains('hidden');
 
-    // 2. Render Opponents (Top Area)
-    const oppArea = document.getElementById('opponents-area');
-    oppArea.innerHTML = '';
-    
-    // Filtra tutti i giocatori tranne quello attivo per metterli in alto
-    let opponents = players.filter(p => p.id !== currentPlayerIdx && !p.eliminated);
-    
-    opponents.forEach(p => {
-        let div = document.createElement('div');
-        div.className = 'opponent';
-        if (p.id === knockerIdx) div.classList.add('knocked');
+    // 1. Avversari
+    let oppDiv = document.getElementById('opponents-div');
+    oppDiv.innerHTML = '';
+    players.forEach(pl => {
+        if(pl.id === p.id || pl.eliminated) return; // Non mostrare se stesso o morti
         
-        let hearts = '❤️'.repeat(p.lives);
-        
-        // Piccole carte indicative
-        let miniCards = '';
-        for(let i=0; i<p.hand.length; i++) miniCards += '<div class="mini-card"></div>';
-
-        div.innerHTML = `
-            <div style="font-weight:bold; font-size:12px; color:white">${p.name}</div>
-            <div style="font-size:10px; color:#ff5252">${hearts}</div>
-            <div class="mini-hand">${miniCards}</div>
+        let d = document.createElement('div');
+        d.className = `opponent ${pl.id === knockerIdx ? 'knocked' : ''} ${pl.id === turnIdx ? 'active' : ''}`;
+        d.innerHTML = `
+            <div style="font-size:12px; font-weight:bold; color:white">${pl.name}</div>
+            <div style="color:#ff5252">${'❤️'.repeat(pl.lives)}</div>
+            <div class="mini-cards">
+                ${'<div class="mini-card-icon"></div>'.repeat(pl.hand.length)}
+            </div>
         `;
-        oppArea.appendChild(div);
+        oppDiv.appendChild(d);
     });
 
-    // 3. Render Mazzo e Scarti
-    const discardDiv = document.getElementById('discard');
-    if (discardPile.length > 0) {
+    // 2. Centro
+    let disc = document.getElementById('discard');
+    if(discardPile.length > 0) {
         let top = discardPile[discardPile.length-1];
-        discardDiv.style.backgroundImage = `url('${top.img}')`;
-        discardDiv.style.border = 'none';
+        disc.innerHTML = `<img src="${top.img}" class="card-img" onerror="this.style.display='none'"><span>${top.txt}</span>`;
+        disc.style.border = 'none';
+        disc.style.background = 'white';
     } else {
-        discardDiv.style.backgroundImage = 'none';
-        discardDiv.style.border = '2px dashed rgba(255,255,255,0.3)';
+        disc.innerHTML = '<div class="pile-label">SCARTI</div>';
+        disc.style.background = 'transparent';
+        disc.style.border = '2px dashed rgba(255,255,255,0.3)';
     }
-    
-    if (deck.length > 0) document.getElementById('deck').style.visibility = 'visible';
-    else document.getElementById('deck').style.visibility = 'hidden';
-}
 
+    // 3. Giocatore Attuale
+    document.getElementById('p-name').innerText = p.name;
+    document.getElementById('p-lives').innerText = '❤️'.repeat(p.lives);
+    document.getElementById('p-score').innerText = isHumanTurn ? `(${p.calcScore()})` : '';
+    
+    let btn = document.getElementById('btn-knock');
+    btn.disabled = !(isHumanTurn && phase === 'draw' && knockerIdx === -1 && p.calcScore() >= 20);
+
+    let handDiv = document.getElementById('player-hand');
+    handDiv.innerHTML = '';
+    
+    if(isHumanTurn) {
+        p.hand.forEach((c, i) => {
+            let div = document.createElement('div');
+            div.className = `card deal-anim ${phase==='discard' ? 'playable' : ''}`;
+            // Fallback IMG + Testo
+            div.innerHTML = `<img src="${c.img}" class="card-img" onerror="this.style.display='none'"><span>${c.txt}</span>`;
+            
+            if(phase === 'discard') div.onclick = () => userDiscard(i);
+            handDiv.appendChild(div);
+        });
+    } else {
+        // Mostra dorso ai bot/spettatori
+        p.hand.forEach(() => {
+            let div = document.createElement('div');
+            div.className = 'card card-back deal-anim';
+            handDiv.appendChild(div);
+        });
+    }
+}
 </script>
 </body>
 </html>
