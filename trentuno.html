@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Gioca ora a 31</title>
+    <title>31 Napoletano - Torneo</title>
     <style>
         /* --- STILE GENERALE --- */
         body {
@@ -54,7 +54,7 @@
         #area-centrale {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 40%; height: 30%;
+            width: 45%; height: 35%;
             display: flex; justify-content: space-around; align-items: center;
             border: 2px dashed rgba(255,255,255,0.1); border-radius: 10px;
         }
@@ -63,7 +63,7 @@
             width: 40%; height: 90%;
             background: rgba(0,0,0,0.2); border-radius: 5px; position: relative;
         }
-        .label-slot { position: absolute; bottom: -20px; width: 100%; text-align: center; font-size: 12px; color: #aaa; }
+        .label-slot { position: absolute; bottom: -25px; width: 100%; text-align: center; font-size: 12px; color: #aaa; }
 
         /* --- GIOCATORI --- */
         .giocatore {
@@ -72,12 +72,26 @@
             display: flex; flex-direction: column; align-items: center;
             transition: all 0.5s ease;
         }
+        
+        /* Nascondiamo i giocatori eliminati */
+        .giocatore.eliminato {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
 
         .avatar {
             width: 7vmin; height: 7vmin;
             background: #eee; border: 0.5vmin solid #333; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             color: black; font-weight: bold; font-size: 3vmin; z-index: 2;
+            position: relative;
+        }
+
+        .vite-container {
+            position: absolute; top: -1.5vmin; right: -1vmin;
+            background: rgba(0,0,0,0.8); border-radius: 10px;
+            padding: 2px 5px; font-size: 1.8vmin; color: red;
+            white-space: nowrap; border: 1px solid white;
         }
 
         .info-box {
@@ -105,11 +119,12 @@
         }
         
         .carta-retro {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Card_back_01.svg/300px-Card_back_01.svg.png');
+            /* NUOVO RETRO RICHIESTO */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Carte_Napoletane_retro.jpg/960px-Carte_Napoletane_retro.jpg');
             background-size: cover; border: 1px solid #ccc;
         }
 
-        /* Carte Umano (Interattive) */
+        /* Carte Umano */
         .giocatore-umano .area-carte .carta {
             position: relative; margin-left: -3.5vmin; cursor: grab;
             transition: transform 0.2s, margin 0.2s;
@@ -118,14 +133,14 @@
         .giocatore-umano .area-carte .carta:hover { transform: translateY(-1vmin); z-index: 10; }
         .giocatore-umano .area-carte .carta:active { cursor: grabbing; }
 
-        /* Carta Volante (Animazione) */
+        /* Animazione Volo */
         .carta-animata {
             position: fixed; z-index: 9999; pointer-events: none;
-            transition: all 0.6s ease-in-out;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: all 0.8s ease-in-out; /* Più lenta per far capire */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transform: scale(1.2);
         }
 
-        /* Carta trascinata (Drag) */
         .carta-dragging {
             position: fixed !important; z-index: 9999 !important; pointer-events: none;
             transform: scale(1.1) rotate(5deg); opacity: 0.9;
@@ -154,7 +169,7 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
         }
 
-        /* --- OVERLAY FINE GIOCO --- */
+        /* --- OVERLAY FINE MANO / PARTITA --- */
         #overlay-fine {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85);
@@ -164,15 +179,25 @@
         }
         #overlay-contenuto {
             background: #222; padding: 30px; border-radius: 10px;
-            border: 2px solid #ffeb3b; text-align: center; min-width: 300px;
+            border: 2px solid #ffeb3b; text-align: center; min-width: 300px; max-width: 90%;
         }
         h2 { color: #ffeb3b; margin: 0 0 10px 0; font-size: 30px;}
-        .risultato-riga { display: flex; justify-content: space-between; margin: 5px 0; font-size: 18px; border-bottom: 1px solid #444;}
+        .risultato-riga { 
+            display: flex; justify-content: space-between; margin: 8px 0; 
+            font-size: 18px; border-bottom: 1px solid #444; padding-bottom: 5px;
+        }
+        .cuori-display { color: red; margin-left: 10px; }
         
         #tutorial-msg {
             position: absolute; bottom: 5%; width: 100%; text-align: center;
             font-size: 2.5vmin; color: rgba(255,255,255,0.8); pointer-events: none;
             background: rgba(0,0,0,0.5); padding: 5px 0;
+        }
+
+        .highlight-slot {
+            box-shadow: 0 0 20px 5px #ffeb3b;
+            border-color: #ffeb3b;
+            transition: 0.3s;
         }
 
     </style>
@@ -181,7 +206,8 @@
 
     <div id="lobby-screen">
         <div class="lobby-box">
-            <h1 style="color:#ffeb3b; margin-top:0;">Gioca ora a 31</h1>
+            <h1 style="color:#ffeb3b; margin-top:0;">31 Napoletano</h1>
+            <p style="font-size: 14px; color: #ccc;">Ogni giocatore ha 3 vite.<br>Chi fa il punteggio più basso perde una vita.</p>
             
             <div class="lobby-row">
                 <label>Totale Giocatori (2-6):</label>
@@ -193,7 +219,7 @@
                 <input type="number" id="input-umani" value="1" min="1" max="6" onchange="checkInputs()">
             </div>
             
-            <button class="btn-start" onclick="avviaGioco()">INIZIA PARTITA</button>
+            <button class="btn-start" onclick="setupIniziale()">INIZIA TORNEO</button>
         </div>
     </div>
 
@@ -220,9 +246,11 @@
 
     <div id="overlay-fine">
         <div id="overlay-contenuto">
-            <h2 id="titolo-fine">VITTORIA!</h2>
+            <h2 id="titolo-fine">FINE MANO</h2>
             <div id="lista-punteggi" style="margin-bottom: 20px; text-align: left;"></div>
-            <button class="btn-start" onclick="location.reload()">Torna alla Home</button>
+            
+            <button id="btn-next-round" class="btn-start" onclick="nuovaMano()">Prossima Mano</button>
+            <button id="btn-home" class="btn-start" onclick="location.reload()" style="display:none; background-color:#f44336; color:white;">Menu Principale</button>
         </div>
     </div>
 
@@ -231,62 +259,83 @@
     const semi = ['denari', 'coppe', 'bastoni', 'spade'];
     let numGiocatori = 4;
     let numUmani = 1;
-    let giocatori = [];
+    let giocatori = []; // Array persistente per le vite
     let mazzo = [];
     let scarti = [];
     let turnoIndice = 0;
-    let faseTurno = 'PESCA'; // PESCA o SCARTO
-    let partitaFinita = false;
+    let dealerIndex = 0; // Chi da le carte ruota
+    let faseTurno = 'PESCA'; 
+    let manoFinita = false;
     let contaBussate = 0;
     let timerBussata;
 
-    // --- SETUP ---
+    // --- SETUP INIZIALE ---
     function checkInputs() {
         let tot = parseInt(document.getElementById('input-totale').value);
         let hum = parseInt(document.getElementById('input-umani').value);
         if(hum > tot) document.getElementById('input-umani').value = tot;
     }
 
-    function avviaGioco() {
+    function setupIniziale() {
         numGiocatori = parseInt(document.getElementById('input-totale').value);
         numUmani = parseInt(document.getElementById('input-umani').value);
         
-        document.getElementById('lobby-screen').style.display = 'none';
-        document.getElementById('tavolo-container').style.display = 'flex';
-        
-        // Listener resize
-        window.addEventListener('resize', ricalcolaPosizioni);
-        
-        nuovaMano();
-    }
-
-    function nuovaMano() {
-        // Init Variabili
-        mazzo = creaMazzo();
-        scarti = [mazzo.pop()];
+        // Creiamo i giocatori con 3 vite
         giocatori = [];
-        turnoIndice = 0;
-        faseTurno = 'PESCA';
-        partitaFinita = false;
-        contaBussate = 0;
-
-        // Crea Giocatori
         for(let i=0; i<numGiocatori; i++) {
             let tipo = (i < numUmani) ? 'UMANO' : 'BOT';
             giocatori.push({
                 id: i,
                 tipo: tipo,
                 nome: tipo === 'UMANO' ? `Giocatore ${i+1}` : `Bot ${i+1}`,
-                mano: [mazzo.pop(), mazzo.pop(), mazzo.pop()],
-                punteggio: 0
+                mano: [],
+                punteggio: 0,
+                vite: 3,
+                eliminato: false
             });
         }
+
+        document.getElementById('lobby-screen').style.display = 'none';
+        document.getElementById('tavolo-container').style.display = 'flex';
+        
+        window.addEventListener('resize', ricalcolaPosizioni);
+        
+        // Inizia la prima mano
+        dealerIndex = Math.floor(Math.random() * numGiocatori);
+        nuovaMano();
+    }
+
+    // --- LOGICA NUOVA MANO ---
+    function nuovaMano() {
+        document.getElementById('overlay-fine').style.display = 'none';
+        
+        // Reset variabili mano
+        mazzo = creaMazzo();
+        scarti = [mazzo.pop()];
+        manoFinita = false;
+        contaBussate = 0;
+        
+        // Distribuzione carte (solo ai vivi)
+        giocatori.forEach(g => {
+            g.mano = [];
+            g.punteggio = 0;
+            if(!g.eliminato) {
+                g.mano.push(mazzo.pop());
+                g.mano.push(mazzo.pop());
+                g.mano.push(mazzo.pop());
+            }
+        });
+
+        // Il turno inizia dopo il dealer, saltando i morti
+        turnoIndice = dealerIndex;
+        passaTurno(true); // true = non scartare, solo cambio indice
 
         creaDOMGiocatori();
         aggiornaGraficaMazzo();
         aggiornaGraficaScarti();
         ricalcolaPosizioni();
         
+        // Avvia il ciclo
         gestisciTurno();
     }
 
@@ -297,6 +346,7 @@
     }
 
     function calcolaPunteggio(mano) {
+        if(!mano || mano.length === 0) return 0;
         let p = {'denari':0,'coppe':0,'bastoni':0,'spade':0};
         mano.forEach(c => {
             let val = (c.rank === 1) ? 11 : (c.rank >= 8 ? 10 : c.rank);
@@ -307,61 +357,71 @@
 
     // --- MOTORE DI GIOCO ---
     function gestisciTurno() {
-        if(partitaFinita) return;
+        if(manoFinita) return;
 
         const g = giocatori[turnoIndice];
+
+        // Se per qualche motivo tocca a un morto, passiamo
+        if(g.eliminato) {
+            passaTurno();
+            return;
+        }
+
         document.querySelectorAll('.giocatore').forEach(e => e.classList.remove('turno-attivo'));
         
-        // Evidenzia giocatore corrente
         const divG = document.getElementById(`g-${g.id}`);
         if(divG) divG.classList.add('turno-attivo');
 
         g.punteggio = calcolaPunteggio(g.mano);
         aggiornaInfoPunteggio(g);
 
-        // Messaggio Tutorial
+        // Messaggi
         const msg = document.getElementById('tutorial-msg');
         if(g.tipo === 'UMANO') {
             msg.innerText = (faseTurno === 'PESCA') 
-                ? `${g.nome}: Trascina dal MAZZO o SCARTI` 
-                : `${g.nome}: Trascina una carta agli SCARTI`;
-                
-            // Abilita interazione bussata solo se Umano e fase corretta
+                ? `${g.nome}: Tocca a te! Trascina dal MAZZO o SCARTI` 
+                : `${g.nome}: Scarta una carta`;
             document.getElementById('zona-bussa').style.opacity = '1';
         } else {
-            msg.innerText = `${g.nome} sta pensando...`;
+            msg.innerText = `${g.nome} sta giocando...`;
             document.getElementById('zona-bussa').style.opacity = '0.3';
-            setTimeout(() => botAI(g), 1000);
+            setTimeout(() => botAI(g), 1200); // Pausa per realismo
         }
     }
 
-    function passaTurno() {
-        if(partitaFinita) return;
-        turnoIndice = (turnoIndice + 1) % numGiocatori;
+    function passaTurno(isSetup = false) {
+        if(manoFinita && !isSetup) return;
+        
+        let tentativi = 0;
+        do {
+            turnoIndice = (turnoIndice + 1) % numGiocatori;
+            tentativi++;
+        } while(giocatori[turnoIndice].eliminato && tentativi < numGiocatori * 2);
+
         faseTurno = 'PESCA';
-        gestisciTurno();
+        if(!isSetup) gestisciTurno();
     }
 
-    // --- AI BOT ANIMATA ---
+    // --- AI BOT MIGLIORATA ---
     function botAI(bot) {
-        if(partitaFinita) return;
+        if(manoFinita) return;
 
-        // 1. DECISIONE PESCA
         const topScarto = scarti[scarti.length-1];
         let vuoleScarto = false;
         
-        // Logica semplice: se lo scarto migliora il punto, prendilo
-        // (Per semplicità qui facciamo un check basilare sul valore alto)
+        // Logica semplice: se lo scarto è una figura/asso e migliora il seme, prendilo
         let valoreScarto = (topScarto.rank===1 ? 11 : (topScarto.rank>=8 ? 10 : topScarto.rank));
         if(valoreScarto >= 8) vuoleScarto = true;
 
         if(vuoleScarto) {
+            // Animazione da TERRA a BOT
             animazionePescaBot(bot, 'SCARTI', () => {
                 bot.mano.push(scarti.pop());
                 aggiornaGraficaScarti();
                 botScarta(bot);
             });
         } else {
+            // Animazione da MAZZO a BOT
             animazionePescaBot(bot, 'MAZZO', () => {
                 if(mazzo.length === 0) rimescola();
                 bot.mano.push(mazzo.pop());
@@ -372,51 +432,56 @@
     }
 
     function botScarta(bot) {
-        // 2. DECISIONE SCARTO
-        // Trova la carta peggiore per il seme dominante
-        let counts = {'denari':0,'coppe':0,'bastoni':0,'spade':0};
-        bot.mano.forEach(c => {
-            let val = (c.rank===1 ? 11 : (c.rank>=8 ? 10 : c.rank));
-            counts[c.seme] += val;
-        });
-        
-        let bestSeme = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-        
-        // Cerca carta non del seme migliore, o la più bassa
-        let idx = 0;
-        let minUtilita = 999;
-        
-        bot.mano.forEach((c, i) => {
-            let val = (c.rank===1 ? 11 : (c.rank>=8 ? 10 : c.rank));
-            let utilita = (c.seme === bestSeme) ? val + 20 : val; // Pesa di più le carte del seme buono
-            if(utilita < minUtilita) {
-                minUtilita = utilita;
-                idx = i;
-            }
-        });
-
-        const cartaDaScartare = bot.mano[idx];
-
-        animazioneScartoBot(bot, cartaDaScartare, () => {
-            bot.mano.splice(idx, 1);
-            scarti.push(cartaDaScartare);
-            aggiornaGraficaScarti();
-            aggiornaManoGrafica(bot);
+        // Pausa "pensiero" dopo aver pescato
+        setTimeout(() => {
+            // Trova carta peggiore
+            let counts = {'denari':0,'coppe':0,'bastoni':0,'spade':0};
+            bot.mano.forEach(c => {
+                let val = (c.rank===1 ? 11 : (c.rank>=8 ? 10 : c.rank));
+                counts[c.seme] += val;
+            });
+            let bestSeme = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
             
-            // Check Vittoria
-            if(calcolaPunteggio(bot.mano) >= 31) {
-                terminaPartita(bot.nome + " ha fatto 31!");
-            } else {
-                passaTurno();
-            }
-        });
+            let idx = 0;
+            let minUtilita = 999;
+            bot.mano.forEach((c, i) => {
+                let val = (c.rank===1 ? 11 : (c.rank>=8 ? 10 : c.rank));
+                let utilita = (c.seme === bestSeme) ? val + 20 : val;
+                if(utilita < minUtilita) { minUtilita = utilita; idx = i; }
+            });
+
+            const cartaDaScartare = bot.mano[idx];
+
+            animazioneScartoBot(bot, cartaDaScartare, () => {
+                bot.mano.splice(idx, 1);
+                scarti.push(cartaDaScartare);
+                aggiornaGraficaScarti();
+                aggiornaManoGrafica(bot);
+                
+                if(calcolaPunteggio(bot.mano) >= 31) {
+                    terminaMano(bot.nome + " ha fatto 31!");
+                } else {
+                    passaTurno();
+                }
+            });
+        }, 800);
     }
 
-    // --- ANIMAZIONI ---
+    // --- ANIMAZIONI VISIVE ---
     function animazionePescaBot(bot, origine, callback) {
-        const startEl = document.getElementById(origine === 'MAZZO' ? 'slot-mazzo' : 'slot-scarti');
+        const slotID = origine === 'MAZZO' ? 'slot-mazzo' : 'slot-scarti';
+        const startEl = document.getElementById(slotID);
         const endEl = document.getElementById(`g-${bot.id}`);
-        creaCartaVolante(startEl, endEl, null, callback);
+
+        // Evidenzia lo slot per far capire da dove pesca
+        startEl.classList.add('highlight-slot');
+        setTimeout(() => startEl.classList.remove('highlight-slot'), 500);
+
+        // Se pesca da scarti, usiamo la carta visibile, altrimenti retro
+        let cartaVisual = null;
+        if(origine === 'SCARTI') cartaVisual = scarti[scarti.length-1];
+
+        creaCartaVolante(startEl, endEl, cartaVisual, callback);
     }
 
     function animazioneScartoBot(bot, cartaDati, callback) {
@@ -438,40 +503,48 @@
              fly.classList.add('carta-retro');
         }
 
+        // Posizione di partenza
         fly.style.left = rectStart.left + 'px';
         fly.style.top = rectStart.top + 'px';
-        fly.style.width = rectStart.width > 60 ? '7.2vmin' : rectStart.width + 'px'; // Adatta size
+        fly.style.width = rectStart.width > 60 ? '7.2vmin' : rectStart.width + 'px';
         fly.style.height = rectStart.height > 90 ? '12vmin' : rectStart.height + 'px';
 
         document.body.appendChild(fly);
 
-        // Trigger animation
+        // Trigger movimento
         requestAnimationFrame(() => {
-            fly.style.left = (rectEnd.left + rectEnd.width/2 - 30) + 'px'; // Centra approx
+            fly.style.left = (rectEnd.left + rectEnd.width/2 - 30) + 'px';
             fly.style.top = (rectEnd.top + rectEnd.height/2 - 50) + 'px';
         });
 
         setTimeout(() => {
             fly.remove();
             if(callback) callback();
-        }, 600); // Durata CSS transition
+        }, 800); // Sincronizzato con CSS transition
     }
-
 
     // --- GESTIONE GRAFICA E DRAG ---
     function creaDOMGiocatori() {
         const tavolo = document.getElementById('tavolo-gioco');
-        // Rimuovi vecchi
-        document.querySelectorAll('.giocatore').forEach(e => e.remove());
+        // Rimuoviamo SOLO gli elementi giocatore, non il centro o bussa
+        tavolo.querySelectorAll('.giocatore').forEach(e => e.remove());
 
         giocatori.forEach(g => {
             const div = document.createElement('div');
             div.className = 'giocatore';
             div.id = `g-${g.id}`;
             if(g.tipo === 'UMANO') div.classList.add('giocatore-umano');
+            if(g.eliminato) div.classList.add('eliminato');
             
+            // Genera stringa cuori
+            let cuori = '';
+            for(let k=0; k<g.vite; k++) cuori += '❤️';
+
             div.innerHTML = `
-                <div class="avatar">${g.nome.charAt(0)}</div>
+                <div class="avatar">
+                    ${g.nome.charAt(0)}
+                    <div class="vite-container">${cuori}</div>
+                </div>
                 <div class="info-box" id="info-${g.id}">Pt: 0</div>
                 <div class="area-carte" id="carte-${g.id}"></div>
             `;
@@ -489,9 +562,6 @@
 
         giocatori.forEach((g, i) => {
             const div = document.getElementById(`g-${g.id}`);
-            // Ruota in modo che il turno corrente sia sempre in basso (opzionale) 
-            // OPPURE: layout fisso. Facciamo layout fisso ma responsive.
-            // 0 sempre basso.
             const step = 360 / numGiocatori;
             const deg = 90 + (i * step);
             const rad = deg * (Math.PI/180);
@@ -502,19 +572,18 @@
     }
 
     function aggiornaManoGrafica(g) {
+        if(g.eliminato) return;
         const container = document.getElementById(`carte-${g.id}`);
         container.innerHTML = '';
         
-        // Mostra carte se è UMANO O se la partita è finita
-        const mostraFaccia = (g.tipo === 'UMANO' || partitaFinita);
+        const mostraFaccia = (g.tipo === 'UMANO' || manoFinita);
         
         g.mano.forEach((c, idx) => {
             const el = document.createElement('div');
             el.className = 'carta';
             if(mostraFaccia) {
                 setCartaBackground(el, c);
-                // Drag Logic
-                if(g.tipo === 'UMANO' && !partitaFinita) {
+                if(g.tipo === 'UMANO' && !manoFinita) {
                     el.dataset.idx = idx;
                     el.dataset.type = 'MANO';
                     setupDrag(el);
@@ -529,17 +598,15 @@
 
     function setCartaBackground(el, c) {
         const semiMap = {'denari':0,'coppe':1,'bastoni':2,'spade':3};
-        // Sprite CSS:
-        // X = (rank-1) * 100 / 9 %
-        // Y = semiMap * 100 / 3 %
         el.style.backgroundPosition = `${(c.rank-1)*(100/9)}% ${semiMap[c.seme]*(100/3)}%`;
     }
 
     function aggiornaInfoPunteggio(g) {
         const box = document.getElementById(`info-${g.id}`);
         if(!box) return;
-        // Se partita in corso, mostra punti solo a Umani. Se finita, a tutti.
-        if(g.tipo === 'UMANO' || partitaFinita) {
+        if(g.eliminato) { box.innerText = "OUT"; return; }
+        
+        if(g.tipo === 'UMANO' || manoFinita) {
             box.innerText = `Pt: ${g.punteggio}`;
         } else {
             box.innerText = `Pt: ?`;
@@ -557,8 +624,6 @@
             el.className = 'carta';
             setCartaBackground(el, c);
             el.style.top='50%'; el.style.left='50%'; el.style.transform='translate(-50%,-50%)';
-            
-            // Abilita Drag
             el.dataset.type = 'SCARTI';
             setupDrag(el);
             slot.appendChild(el);
@@ -577,14 +642,11 @@
             el.dataset.type = 'MAZZO';
             setupDrag(el);
             slot.appendChild(el);
-        } else {
-            // Se mazzo vuoto, rimescola
-            rimescola();
-        }
+        } else { rimescola(); }
     }
     
     function rimescola() {
-        if(scarti.length <= 1) return; // Non si può mescolare se non ci sono scarti
+        if(scarti.length <= 1) return;
         let ultima = scarti.pop();
         mazzo = scarti;
         scarti = [ultima];
@@ -593,7 +655,7 @@
         aggiornaGraficaScarti();
     }
 
-    // --- LOGICA DRAG & DROP UNIFICATA ---
+    // --- DRAG & DROP ---
     let dragItem = null;
     let dragClone = null;
     let touchStartX, touchStartY;
@@ -604,20 +666,17 @@
     }
 
     function startDrag(e) {
-        if(partitaFinita) return;
-        // Verifica se è il turno di questo giocatore (se umano)
+        if(manoFinita) return;
         const gAttuale = giocatori[turnoIndice];
-        if(gAttuale.tipo !== 'UMANO') return;
+        if(gAttuale.tipo !== 'UMANO' || gAttuale.id !== 0) return; // Solo player 0 è 'te' per il drag
 
-        // Regole Fase
         const type = e.target.dataset.type;
-        if(faseTurno === 'PESCA' && type === 'MANO') return; // Prima pesca!
-        if(faseTurno === 'SCARTO' && (type === 'MAZZO' || type === 'SCARTI')) return; // Prima scarta!
+        if(faseTurno === 'PESCA' && type === 'MANO') return;
+        if(faseTurno === 'SCARTO' && (type === 'MAZZO' || type === 'SCARTI')) return;
 
         e.preventDefault();
         dragItem = e.target;
         
-        // Clone
         const rect = dragItem.getBoundingClientRect();
         dragClone = dragItem.cloneNode(true);
         dragClone.classList.add('carta-dragging');
@@ -644,7 +703,6 @@
         const dx = pt.clientX - touchStartX;
         const dy = pt.clientY - touchStartY;
         
-        // Muovi sommando al left/top iniziale
         let curLeft = parseFloat(dragClone.style.left);
         let curTop = parseFloat(dragClone.style.top);
         dragClone.style.left = (curLeft + dx) + 'px';
@@ -662,7 +720,6 @@
 
         if(!dragClone) return;
 
-        // Collision Check
         const cRect = dragClone.getBoundingClientRect();
         const cX = cRect.left + cRect.width/2;
         const cY = cRect.top + cRect.height/2;
@@ -674,7 +731,6 @@
         let successo = false;
         const sourceType = dragItem.dataset.type;
 
-        // 1. Pesca (Mazzo/Scarti -> Mano)
         if(faseTurno === 'PESCA' && (sourceType==='MAZZO' || sourceType==='SCARTI')) {
             if(rectHit(cX, cY, zonaMano)) {
                 successo = true;
@@ -688,11 +744,10 @@
                 }
                 faseTurno = 'SCARTO';
                 aggiornaManoGrafica(g);
-                gestisciTurno(); // Aggiorna testi
+                gestisciTurno();
             }
         }
         
-        // 2. Scarto (Mano -> Scarti)
         if(faseTurno === 'SCARTO' && sourceType === 'MANO') {
             if(rectHit(cX, cY, zonaScarti)) {
                 successo = true;
@@ -702,9 +757,8 @@
                 aggiornaGraficaScarti();
                 aggiornaManoGrafica(g);
                 
-                // Check 31
                 if(calcolaPunteggio(g.mano) >= 31) {
-                    terminaPartita(g.nome + " ha fatto 31!");
+                    terminaMano(g.nome + " ha fatto 31!");
                 } else {
                     passaTurno();
                 }
@@ -720,18 +774,14 @@
         return (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
     }
 
-
     // --- BUSSATA & FINE ---
     document.getElementById('zona-bussa').addEventListener('click', handleBussa);
     document.getElementById('zona-bussa').addEventListener('touchstart', (e)=>{e.preventDefault(); handleBussa();});
 
     function handleBussa() {
-        if(partitaFinita) return;
+        if(manoFinita) return;
         const g = giocatori[turnoIndice];
         if(g.tipo !== 'UMANO') return;
-        // Si può bussare solo se si è pescato e si hanno 4 carte?
-        // O se ne hanno 3 prima di pescare? Regola comune: Bussata = Fine turno SENZA scartare o DOPO scarto.
-        // Implementazione semplice: Se tocchi 4 volte, chiudi.
         
         contaBussate++;
         clearTimeout(timerBussata);
@@ -740,7 +790,7 @@
         if(contaBussate >= 4) {
             triggerAnimBussa();
             setTimeout(() => {
-                terminaPartita(g.nome + " HA BUSSATO!");
+                terminaMano(g.nome + " HA BUSSATO!");
             }, 800);
         }
     }
@@ -752,31 +802,75 @@
         setTimeout(()=>{a.style.display='none';},600);
     }
 
-    function terminaPartita(motivo) {
-        partitaFinita = true;
+    function terminaMano(motivo) {
+        manoFinita = true;
         
-        // Riveliamo tutte le carte
-        giocatori.forEach(g => {
-            aggiornaManoGrafica(g); // Questo rimuove i retri perché partitaFinita = true
+        // Rivela carte
+        giocatori.forEach(g => { if(!g.eliminato) aggiornaManoGrafica(g); });
+
+        // Calcola punteggi e perdenti
+        // Nota: Solo i giocatori NON eliminati partecipano
+        let attivi = giocatori.filter(g => !g.eliminato);
+        
+        // Trova punteggio minimo
+        let minScore = 999;
+        attivi.forEach(g => { if(g.punteggio < minScore) minScore = g.punteggio; });
+
+        // Togli vita a chi ha il minimo
+        attivi.forEach(g => {
+            if(g.punteggio === minScore) {
+                g.vite--;
+                if(g.vite <= 0) g.eliminato = true;
+            }
         });
 
-        // Mostra Overlay con calma
         setTimeout(() => {
             const over = document.getElementById('overlay-fine');
             over.style.display = 'flex';
             document.getElementById('titolo-fine').innerText = motivo;
             
-            // Genera classifica
-            let classifica = [...giocatori].sort((a,b) => b.punteggio - a.punteggio);
             let html = '';
-            classifica.forEach(g => {
-                let color = (g.id === classifica[0].id) ? '#ffeb3b' : 'white';
+            giocatori.forEach(g => {
+                let status = g.eliminato ? '(ELIMINATO)' : '';
+                let color = g.eliminato ? 'gray' : (g.vite===0 ? 'red' : 'white');
+                let cuori = '';
+                for(let k=0; k<g.vite; k++) cuori += '❤️';
+                
                 html += `<div class="risultato-riga" style="color:${color}">
-                            <span>${g.nome}</span> <span>${g.punteggio} pt</span>
+                            <span>${g.nome} ${status}</span> 
+                            <span>${g.punteggio} pt <span class="cuori-display">${cuori}</span></span>
                          </div>`;
             });
             document.getElementById('lista-punteggi').innerHTML = html;
-        }, 1000);
+
+            // Logica Bottoni
+            const btnNext = document.getElementById('btn-next-round');
+            const btnHome = document.getElementById('btn-home');
+            
+            // Conta vivi
+            let vivi = giocatori.filter(g => !g.eliminato);
+            
+            // Se l'umano principale (g[0]) è morto: GAME OVER
+            if(giocatori[0].eliminato) {
+                document.getElementById('titolo-fine').innerText = "GAME OVER";
+                btnNext.style.display = 'none';
+                btnHome.style.display = 'inline-block';
+            } 
+            // Se c'è solo un vincitore
+            else if(vivi.length === 1) {
+                document.getElementById('titolo-fine').innerText = `VINCE ${vivi[0].nome}!`;
+                btnNext.style.display = 'none';
+                btnHome.style.display = 'inline-block';
+            }
+            // Altrimenti continua
+            else {
+                btnNext.style.display = 'inline-block';
+                btnHome.style.display = 'none';
+                // Dealer ruota per la prossima mano
+                dealerIndex = (dealerIndex + 1) % numGiocatori;
+            }
+
+        }, 1500);
     }
 
 </script>
