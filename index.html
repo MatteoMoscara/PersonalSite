@@ -7,12 +7,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="keywords" content="Matteo Moscara">
     <meta name='robots' content='index, follow' /><title>Matteo Moscara</title>
-    <meta name="description" content="Ciao, mi chiamo Matteo Moscara, questo è il mio portfolio, sono un graphic web designer. Hai bisogno di un sito professionale o grafica adv?" />
-    <link rel="canonical" href="https://matteomoscara.it/" />
+<meta name="description" content="Ciao, mi chiamo Matteo Moscara, questo è il mio portfolio, sono un graphic web designer. Do forma alle idee attraverso il web e la grafica." />    <link rel="canonical" href="https://matteomoscara.it/" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Matteo Moscara" />
-    <meta property="og:description" content="Ciao, mi chiamo Matteo Moscara, questo è il mio portfolio, sono un graphic web designer. Hai bisogno di un sito professionale o grafica adv?" />
+    <meta property="og:description" content="Ciao, mi chiamo Matteo Moscara, questo è il mio portfolio, sono un graphic web designer. Do forma alle idee attraverso il web e la grafica." />
     <meta property="og:url" content="https://matteomoscara.it/" />
     <meta property="og:site_name" content="Matteo Moscara" />
     <meta property="og:image" content="https://matteomoscara.it/img/Pittogramma-MM.png" />
@@ -21,8 +20,8 @@
     <meta property="og:image:type" content="image/png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Matteo Moscara" />
-    <meta name="twitter:description" content="Ciao, mi chiamo Matteo Moscara, questo è il mio portfolio, sono un graphic web designer. Hai bisogno di un sito professionale o grafica adv?" />
-    <meta name="twitter:image" content="hhttps://matteomoscara.it/img/Pittogramma-MM.png" />
+    <meta name="twitter:description" content="Ciao, mi chiamo Matteo Moscara, questo è il mio portfolio, sono un graphic web designer. Do forma alle idee attraverso il web e la grafica." />
+    <meta name="twitter:image" content="https://matteomoscara.it/img/Pittogramma-MM.png" />
     <meta name="twitter:label1" content="Tempo di lettura stimato" />
     <meta name="twitter:data1" content="10 minuti" />
     <!-- Favicon -->
@@ -45,276 +44,264 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
-<style>
-  /* Stili */
-  body {
-    transition: background-color 1s, color 1s;
-    overflow-x: hidden; /* Hide horizontal scrollbar */
-    overflow-y: scroll; /* Add vertical scrollbar */
-  }
-  .hero-section {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    position: relative;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
-
-  .hero-content {
-    z-index: 1; /* Assicura che il contenuto sia visibile sopra l'immagine di sfondo */
-  }
-
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.5); /* Sovrappone un overlay per migliorare il contrasto del testo */
-    z-index: 0;
-  }
-
-  .random-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  .pirandello-quote {
-    font-style: italic;
-    text-align: center;
-    margin-top: 20px;
-  }
-
-  .card {
-    transition: transform 0.3s;
-  }
-  .card:hover {
-    transform: scale(1.05);
-  }
-  .py-10 {
-    padding-top: 8rem !important;
-    padding-bottom: 8rem !important;
-}
-.sticky-text {
-  position: sticky;
-  top: 20px;
-  transition: transform 0.1s ease-out;
-}
-</style>
-
 <body>
-  <!-- Hero Section -->
-  <section id="hero" class="hero-section p-0 position-relative">
-    <div id="particles-js" class="w-100 position-absolute" style="z-index: 1;"></div>
-    <div class="hero-content position-absolute w-100 text-center" style="z-index: 2; top: 50%; transform: translateY(-50%);">
-      <div class="sticky-text">
-        <h1 class="display-2">Benvenut*</h1>
-        <p class="text-dark fs-4">Ogni volta che Mi visiti, vedrai qualcosa di diverso...</p>
-      </div>
-    </div>
-  </section>
-
-
-  <div class="container py-5">
-    <!-- Biografia Section -->
-    <section id="bio" class="mb-5 py-10">
-      <div class="sticky-text">
-        <h2 class="display-4 mb-lg-5 text-center">Chi sono</h2>
-        <p id="dynamic-text-bio" class="lead text-dark fs-4 text-center">Sono una professionista creativo, ambizioso e sempre alla ricerca di nuove sfide.</p>
-        <div class="pirandello-quote">
-          <blockquote id="quote" class="text-dark fs-5">"Così è (se vi pare)"</blockquote>
+    <nav class="navbar navbar-expand-lg bg-white navbar-light fixed-top shadow-sm py-3">
+      <div class="container px-4">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="#hero">
+          <img src="img/Pittogramma-MM.png" alt="Logo Matteo" class="me-2" style="width: 40px;" loading="lazy">
+          Matteo Moscara
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#chi-sono">Chi sono</a></li>
+            <li class="nav-item"><a class="nav-link" href="#competenze">Competenze</a></li>
+            <li class="nav-item"><a class="nav-link" href="#forza">Forza</a></li>
+            <li class="nav-item"><a class="nav-link" href="#progetti">Progetti</a></li>
+          </ul>
         </div>
       </div>
-    </section>
+    </nav>
 
-
-    <!-- Sezione Progetti -->
-    <section id="progetti" class="mt-5 sticky-text">
-      <h2 class="display-4 mb-lg-5 text-center">Riflessioni</h2>
-      <div class="row text-dark text-center" id="projects-container"></div>
-    </section>
-
-
-  </div>
-      <!-- Contenuto Random -->
-      <section id="random-content" class="mt-5">
-        <div class="random-content mt-5 sticky-text" style="margin-top: 80px!important">
-          <button id="change-layout" class="btn change-layout my-5"><i title="Non sempre è facile cambiare">Basta! Cambio</i></button>
+    <main class="page-wrapper">
+      <section id="hero" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div id="particles-js" class="hero-particles"></div>
+        <div class="container hero-copy text-center text-white">
+          <span class="eyebrow text-uppercase mb-3 d-inline-block">Portfolio personale</span>
+          <h1 class="display-4 fw-bold mb-4 text-white">Ciao, sono Matteo.<br><span class="hero-accent">Do forma</span> alle idee sul web.</h1>
+          <p class="lead hero-subtitle mb-5">Progetti con <span class="typed-text"></span><span class="typed-cursor">|</span></p>
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-4">
+            <a href="#progetti" class="btn btn-primary btn-lg">Dai un'occhiata ai progetti</a>
+            <a href="curriculum/curriculum-matteo-moscara-2023.pdf" target="_blank" class="btn btn-outline-light btn-lg disabled" aria-disabled="true">CV in aggiornamento</a>
+          </div>
+          <p class="small text-white-75 mb-4 hero-note">Questo è il mio spazio, piacere di conoscerti</p>
+          <div class="hero-highlights d-flex flex-column flex-md-row justify-content-center gap-4">
+            <span>Design pulito</span>
+            <span>Logica strutturale</span>
+            <span>Collaborazione serena</span>
+          </div>
         </div>
       </section>
 
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    particlesJS("particles-js", {
-    particles: {
-      number: { value: 90, density: { enable: true, value_area: 800 } },
-      color: { value: "#555555" },
-      shape: {
-        type: "circle",
-        stroke: { width: 0, color: "#000000" },
-        polygon: { nb_sides: 5 },
-      },
-      opacity: { value: 0.6, random: false, anim: { enable: true } },
-      size: { value: 2, random: true, anim: { enable: false } },
-      line_linked: { enable: true, distance: 150, color: "#555555", opacity: 0.7, width: 1 },
-      move: { enable: true, speed: 2, direction: "none", random: true },
-    },
-    interactivity: {
-      detect_on: "canvas",
-      events: {
-        onhover: { enable: true, mode: "grab" },
-        onclick: { enable: true, mode: "push" },
-        resize: true,
-      },
-      modes: {
-        grab: { distance: 140, line_linked: { opacity: 1 } },
-        bubble: { distance: 400, size: 40, duration: 2 },
-        repulse: { distance: 200 },
-      },
-    },
-    retina_detect: true,
-  });
-  </script>
-  <script>
-    // Colori e sfondi random
-    const colors = ["#fafad2", "#e0ffff", "#fff3f0", "#d0f0c0", "#fdf8eb", "#f8f8ff", "#fffaf0", "#fff5e1", "#f5e6fa", "#f0fff8"];
-    const bioTexts = [
-      "Mi presento come ambizioso, ma forse c'è molto di più che non riesco nemmeno a definire...",
-      "Questo sito riflette solo una parte di me, ma quanto di me riesci davvero a vedere?",
-      "Sono molte cose, alcune chiare, altre ancora da scoprire... e tu, cosa percepisci?",
-      "Ogni giorno cambio, mi evolvo, proprio come le idee che mi attraversano."
-    ];
-    const quotes = [
-      "\"Ciascuno di noi si crede uno, ma non è vero: è tanti, secondo le possibilità d'essere che sono in noi.\"",
-      "\"La vita o la si vive o la si scrive.\"",
-      "\"Io sono colui che mi si crede.\"",
-      "\"La realtà non è mai come la si vede: la verità è soprattutto immaginazione.\""
-    ];
-    const heroImages = [
-      'img/hero/alba.jpg',
-      'img/hero/ponte.webp',
-      'img/hero/architettura.jpg',
-      'img/hero/natura-morta.jpg',
-      'img/hero/paesaggio.jpg'
-    ];
-    const projects = [
-      {
-        img: 'https://res.cloudinary.com/dagi6bwtd/image/upload/w_500,h_500,c_thumb/v1681733804/foto/Rifugio-pomilio.jpg',
-        title: 'Oggetti',
-        text: 'Ci sono oggetti che non valgono nulla agli occhi del mondo, ma per noi hanno un valore inestimabile. Non per ciò che sono, ma per ciò che rappresentano. Sono frammenti di un passato che non possiamo riavere indietro, ma che vive ancora attraverso loro. Una vecchia fotografia, una lettera ingiallita, un libro consumato dal tempo, un orologio fermo a quell’ora precisa, un semplice braccialetto… oggetti che, per altri, sono solo cose, ma per noi sono pezzi di cuore. <br> I.S.'
-      },
-      {
-        img: 'https://res.cloudinary.com/dagi6bwtd/image/upload/w_500,h_500,c_thumb/v1681733804/foto/Francavilla-al-mare.jpg',
-        title: 'Mosaico in evoluzione',
-        text: "Spesso mi fermo a riflettere su chi sono realmente, ma ogni volta la risposta sembra diversa, come se il mio \"io\" fosse un mosaico in continuo cambiamento. Ogni esperienza, relazione o sfida aggiunge una tessera nuova, alcune brillanti, altre scure, ma tutte essenziali. Mi rendo conto che cercare di definirmi con un’unica etichetta è limitante: sono l'insieme di tutto ciò che ho vissuto, ma anche delle potenzialità che ancora non ho espresso."
-      },
-      {
-        img: 'https://res.cloudinary.com/dagi6bwtd/image/upload/w_500,h_500,c_thumb/v1681733804/foto/salto.jpg',
-        title: 'Il valore dei piccoli traguardi',
-        text: "Ogni passo avanti, anche il più piccolo, ha un peso enorme. Non importa quanto lontano sia il traguardo finale, ciò che conta è guardarsi indietro e rendersi conto di quanta strada si è già percorsa."
-      },
-      {
-        img: 'img/robin_williams.jpg',
-        title: 'La vita in un trattino',
-        text: "\"Se vi dovesse capitare di passare davanti alla mia tomba, vedrete due date, con un trattino in mezzo.<br>\
-                Bene, guardate attentamente quel trattino.<br>\
-                É l'unica cosa che conta\"<br>\
-                <i>Robin Williams (1951 - 2014)</i>"
-      },
-    ];
-
-    // Funzione per cambiare sfondo della hero in modo casuale
-    function changeHeroBackground() {
-      const heroSection = document.getElementById('hero');
-      const randomImage = heroImages[Math.floor(Math.random() * heroImages.length)];
-      heroSection.style.backgroundImage = `url(${randomImage})`;
-    }
-
-    // Funzione per randomizzare colori, testi e immagini
-    function randomize() {
-      // Cambia colore di sfondo e testo
-      document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      document.body.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-      // Cambia il testo dinamico della biografia
-      document.getElementById('dynamic-text-bio').textContent = bioTexts[Math.floor(Math.random() * bioTexts.length)];
-
-      // Cambia citazione Pirandelliana
-      document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-
-      // Cambia immagine casuale solo se esiste l'elemento
-      const randomImageElement = document.getElementById('random-image');
-      if (randomImageElement) {
-        randomImageElement.src = projectImages[Math.floor(Math.random() * projectImages.length)];
-      }
-    }
-
-
-    // Funzione per visualizzare i progetti
-    function displayRandomProjects() {
-      const container = document.getElementById('projects-container');
-      const shuffled = projects.sort(() => 0.5 - Math.random());
-      const selectedProjects = shuffled.slice(0, 3);
-      container.innerHTML = '';
-
-      selectedProjects.forEach(project => {
-        const projectHTML = `
-          <div class="col-md-4">
-            <div class="card">
-              <img src="${project.img}" class="card-img-top" alt="${project.title}">
-              <div class="card-body">
-                <h5 class="card-title">${project.title}</h5>
-                <p class="card-text">${project.text}</p>
+      <section id="chi-sono" class="container-fluid py-6 hero-chisono scroll-zoom">
+        <div class="container">
+          <div class="section-heading text-center mb-5">
+            <span class="eyebrow">Chi sono</span>
+            <h2 class="mb-3 cycling-text" data-texts="Cerco il senso logico delle cose, nel codice e nel design.|Mi piace ascoltare e costruire le cose un pezzo alla volta.|Un approccio pragmatico, senza effetti speciali inutili."></h2>
+            <p class="text-white mx-auto" style="max-width: 720px;">Un graphic web designer che apprezza l'ordine. Più che inseguire effetti speciali inutili, costruisce percorsi semplici e funzionali.</p>
+          </div>
+          <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+              <div class="card feature-card shadow-sm border-0 h-100">
+                <div class="card-body">
+                <h3 class="h4 mb-3 text-white">Concretezza prima di tutto</h3>
+                <p>Mi piace dare uno scopo a ogni elemento. Costruisco spazi digitali ordinati e facili da navigare.</p>
+                  <ul class="list-unstyled mt-4">
+                    <li class="mb-2 text-white"><i class="fas fa-check-circle text-primary me-2"></i>Competenza grafica e front-end</li>
+                    <li class="mb-2 text-white"><i class="fas fa-check-circle text-primary me-2"></i>Organizzazione del lavoro</li>
+                    <li class="text-white"><i class="fas fa-check-circle text-primary me-2"></i>Tranquillità anche sotto pressione</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="row g-4">
+                <div class="col-sm-6">
+                  <div class="info-box p-4 h-100 shadow-sm">
+                    <h5 class="mb-3 text-white">Adattabile</h5>
+                    <p class="small">Mi calibro sulle necessità del progetto senza mai perdere di vista la qualità.</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="info-box p-4 h-100 shadow-sm">
+                    <h5 class="mb-3 text-white">Diretto</h5>
+                    <p class="small">Passo dall'idea all'esecuzione cercando sempre la strada più semplice e pulita.</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="info-box p-4 h-100 shadow-sm">
+                    <h5 class="mb-3 text-white">Logico</h5>
+                    <p class="small">Mi piace sciogliere i nodi tecnici e creativi affrontandoli un passo alla volta.</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="info-box p-4 h-100 shadow-sm">
+                    <h5 class="mb-3 text-white">Ascolto</h5>
+                    <p class="small">Lavoro bene in team perché credo che le cose migliori nascano confrontandosi.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        `;
-        container.innerHTML += projectHTML;
-      });
-    }
+        </div>
+      </section>
 
-    // Unico gestore window.onload per evitare sovrascrittura
-    window.onload = function() {
-      changeHeroBackground();
-      randomize();
-      displayRandomProjects();
-    };
+      <section id="competenze" class="bg-light py-6 scroll-zoom">
+        <div class="container">
+          <div class="section-heading text-center mb-5">
+            <span class="eyebrow">Competenze</span>
+            <h2 class="mb-4">Cinque blocchi che raccontano come lavoro.</h2>
+          </div>
+          <div class="competence-shell" id="competence-shell" aria-label="Scorri competenze"></div>
+          <div class="text-center mt-4">
+          </div>
+        </div>
+      </section>
 
-    // Aggiungi evento per il bottone "Cambia Aspetto"
-    document.getElementById('change-layout').addEventListener('click', function() {
-      location.reload();
-    });
+      <!-- <section id="campo" class="bg-darker campo-scroll-section">
+        <div class="campo-sticky-container">
+          <div class="field-frame" id="field-frame">
+            <svg class="field-shape" viewBox="0 0 2000 1500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <g mask="url(#mask0_467_1610)">
+                <path d="M2000 0H0V1502.4L2000 1500V0Z" fill="#29006A"></path>
+                <path d="M734.7 80.7002H1265.1C1634.9 80.7002 1934.4 380.3 1934.4 750C1934.4 1119.7 1634.8 1419.3 1265.1 1419.3H734.7C364.9 1419.3 65.4004 1119.7 65.4004 750C65.4004 380.3 365.1 80.7002 734.7 80.7002Z" fill="#4349B5"></path>
+                <mask id="mask1_467_1610" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="65" y="80" width="1870" height="1340">
+                  <path d="M734.7 80.7002H1265.1C1634.9 80.7002 1934.4 380.3 1934.4 750C1934.4 1119.7 1634.8 1419.3 1265.1 1419.3H734.7C364.9 1419.3 65.4004 1119.7 65.4004 750C65.4004 380.3 365.1 80.7002 734.7 80.7002Z" fill="white"></path>
+                </mask>
+                <g mask="url(#mask1_467_1610)" class="stadium-stroke-lines">
+                  <path d="M292.801 1457.1L1707 43"></path>
+                  <path d="M0.100586 750H2000"></path>
+                  <path d="M292.801 42.8003L1707 1457"></path>
+                  <path d="M1000 -249.9V1750"></path>
+                  <path d="M617.501 1674L1383 -174.1"></path>
+                  <path d="M76.4004 1132.5L1924 367.5"></path>
+                  <path d="M76.4004 367.5L1924 1132.5"></path>
+                  <path d="M617.501 -174.1L1383 1674"></path>
+                  <path d="M617.501 1674L1383 -174.1"></path>
+                  <path d="M76.4004 1132.5L1924 367.5"></path>
+                  <path d="M76.4004 367.5L1924 1132.5"></path>
+                  <path d="M617.501 -174.1L1383 1674"></path>
+                  <path d="M805.101 1730.7L1195.3 -230.7"></path>
+                  <path d="M168.7 1305.4L1831.7 194.6"></path>
+                  <path d="M19.3008 555.1L1981 945"></path>
+                  <path d="M444.601 -81.7998L1555.8 1581"></path>
+                  <path d="M444.601 1581.2L1555.8 -81.7998"></path>
+                  <path d="M19.3008 944.8L1981 554.9"></path>
+                  <path d="M168.7 194.6L1831.5 1305.4"></path>
+                  <path d="M805.101 -230.7L1195.5 1730.5"></path>
+                  <path d="M845.401 387.6H1154.6C1354.8 387.6 1516.8 549.8 1516.8 749.8C1516.8 949.8 1354.6 1112 1154.6 1112H845.401C645.201 1112 483.001 949.8 483.001 749.8C483.001 549.8 645.201 387.6 845.401 387.6Z"></path>
+                  <path d="M798.201 276.9H1201.9C1463.3 276.9 1674.8 488.7 1674.8 749.8C1674.8 1010.9 1463 1222.7 1201.9 1222.7H798.201C536.801 1222.7 325.101 1010.9 325.101 749.8C325.101 488.7 536.901 276.9 798.201 276.9Z"></path>
+                  <path d="M747.801 158.9H1252.2C1578.8 158.9 1843.1 423.5 1843.1 749.8C1843.1 1076.1 1578.5 1340.7 1252.2 1340.7H747.801C421.201 1340.7 156.601 1076.1 156.601 749.8C156.601 423.5 421.201 158.9 747.801 158.9Z"></path>
+                  <path d="M727.18 110.55H1272.85C1626.17 110.55 1912.1 396.8 1912.1 749.8C1912.1 1102.8 1625.85 1389.05 1272.85 1389.05H727.18C373.86 1389.05 87.6104 1102.8 87.6104 749.8C87.6104 396.8 373.86 110.55 727.18 110.55Z"></path>
+                  <path d="M823.201 521.4H1176.6C1302.9 521.4 1405.2 623.7 1405.2 750C1405.2 876.3 1302.9 978.6 1176.6 978.6H823.201C696.901 978.6 594.601 876.3 594.601 750C594.601 623.7 696.901 521.4 823.201 521.4Z"></path>
+                  <path d="M834.001 611.5H1166.3C1242.9 611.5 1304.8 673.5 1304.8 750C1304.8 826.5 1242.8 888.5 1166.3 888.5H834.001C757.401 888.5 695.501 826.5 695.501 750C695.501 673.5 757.501 611.5 834.001 611.5Z"></path>
+                </g>
+              </g>
+            </svg>
+            <div class="field-surface"></div>
+            <div class="field-content-inner" id="field-copy">
+              <h2 class="mb-3 text-white display-5 fw-bold">Un campo dove il progetto prende forma.</h2>
+              <p class="mb-0 text-white lead" style="max-width: 700px; margin: 0 auto;">
+                Un ambiente chiaro e armonico che mette in luce il progetto, lasciando che le sezioni successive scivolino dolcemente sopra il campo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section> -->
 
-    // Testo leggermente sticky
-    // Movimento del testo in base al mouse
-    document.addEventListener('mousemove', (event) => {
-      const texts = document.querySelectorAll('.sticky-text');
-      const { clientX, clientY } = event;
-      const xOffset = (clientX / window.innerWidth - 0.5) * 20; // Movimento orizzontale
-      const yOffset = (clientY / window.innerHeight - 0.5) * 20; // Movimento verticale
+      <section id="campo" class="bg-darker campo-scroll-section">
+        <div class="campo-sticky-container">
+          
+          <div class="field-frame" id="field-frame">
+            <svg class="field-shape" viewBox="0 0 2000 1500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              </svg>
+            <div class="field-surface"></div>
+          </div>
 
-      texts.forEach((text) => {
-        text.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-      });
-    });
+          <div class="field-content-fixed" id="field-copy">
+            <h2 class="mb-3 text-white display-5 fw-bold">Un campo dove il progetto prende forma.</h2>
+            <p class="mb-0 text-white lead" style="max-width: 700px; margin: 0 auto;">
+              Un ambiente chiaro e armonico che mette in luce il progetto, lasciando che le sezioni successive scivolino dolcemente sopra il campo.
+            </p>
+          </div>
 
-    // Movimento leggero verso il basso durante lo scrolling
-    window.addEventListener('scroll', () => {
-      const texts = document.querySelectorAll('.sticky-text');
-      const scrollPosition = window.scrollY;
+        </div>
+      </section>
 
-      texts.forEach((text) => {
-        const offset = scrollPosition * 0.05; // Movimento verticale proporzionale allo scroll
-        text.style.transform = `translateY(${offset}px)`;
-      });
-    });
+      <section id="forza" class="container py-6 scroll-zoom">
+        <div class="section-heading text-center mb-5">
+          <span class="eyebrow">Il mio approccio</span>
+          <h2 class="mb-3">Come mi muovo nei progetti.</h2>
+        </div>
+        <div class="row gy-4">
+          <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+              <div class="card-body">
+                <h5>Metodo</h5>
+                <p class="small">Faccio le cose con ordine. Niente caos, solo un passo dopo l'altro.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+              <div class="card-body">
+                <h5>Tranquillità</h5>
+                <p class="small">Nei momenti di stress non alzo la voce, ma cerco soluzioni per far procedere il lavoro.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+              <div class="card-body">
+                <h5>Concretezza</h5>
+                <p class="small">Non propongo effetti speciali se prima non abbiamo sistemato le basi e la logica.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  </script>
+      <section id="progetti" class="bg-secondary text-white py-6 scroll-zoom">
+        <div class="container">
+          <div class="section-heading text-center text-white mb-5">
+            <span class="eyebrow text-white">Progetti</span>
+            <h2 class="mb-4">Alcuni lavori a cui ho preso parte.</h2>
+          </div>
+          <div class="row g-4" id="projects-container">
+            <div class="col-md-4">
+              <div class="card shadow-sm border-0 h-100 text-dark project-card">
+                <img src="img/foto/Rifugio-pomilio.jpg" class="card-img-top" alt="Spazi logici" loading="lazy">
+                <div class="card-body">
+                  <h5 class="card-title">Spazi logici</h5>
+                  <p class="card-text">Costruire un percorso sensato. Progetti pensati per essere usati facilmente.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm border-0 h-100 text-dark project-card">
+                <img src="img/foto/Francavilla-al-mare.jpg" class="card-img-top" alt="Linguaggio visivo chiaro" loading="lazy">
+                <div class="card-body">
+                  <h5 class="card-title">Linguaggio visivo chiaro</h5>
+                  <p class="card-text">Ogni elemento aiuta chi naviga a trovare subito quello che cerca.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm border-0 h-100 text-dark project-card">
+                <img src="img/foto/salto.jpg" class="card-img-top" alt="Gerarchie pulite" loading="lazy">
+                <div class="card-body">
+                  <h5 class="card-title">Gerarchie pulite</h5>
+                  <p class="card-text">Dare la giusta priorità agli elementi, senza sovrapposizioni inutili.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="py-4 bg-dark text-light text-center">
+      <div class="container">
+        <p class="mb-2 small">© Matteo Moscara · Portfolio personale · Design, codice e un po' di ordine.</p>      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/hero-dynamics.js"></script>
+  </body>
 </html>
