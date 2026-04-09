@@ -415,6 +415,86 @@ function addMobileShake() {
   }
 }
 
+function setupHeaderScrollBehavior() {
+  const header = document.querySelector('.navbar.fixed-top');
+  const collapseElement = document.querySelector('.navbar-collapse');
+  if (!header) return;
+
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function updateHeader() {
+    const currentScroll = window.scrollY;
+    const isScrollingDown = currentScroll > lastScrollY && currentScroll > 120;
+    const isMenuOpen = collapseElement && collapseElement.classList.contains('open');
+
+    if (isMenuOpen) {
+      header.classList.remove('navbar-hidden');
+    } else {
+      header.classList.toggle('navbar-hidden', isScrollingDown);
+    }
+
+    lastScrollY = currentScroll;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateHeader);
+    }
+  }, { passive: true });
+
+  if (collapseElement) {
+    collapseElement.addEventListener('transitionend', () => {
+      lastScrollY = window.scrollY;
+    });
+  }
+}
+
+function setupMobileMenu() {
+  const toggleButton = document.querySelector('.mobile-menu-toggle');
+  const menu = document.querySelector('.navbar-collapse');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const closeButton = document.querySelector('.mobile-menu-close');
+  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+  if (!toggleButton || !menu || !backdrop || !closeButton) return;
+
+  function setMenuState(open) {
+    menu.classList.toggle('open', open);
+    backdrop.classList.toggle('open', open);
+    toggleButton.setAttribute('aria-expanded', String(open));
+    menu.setAttribute('aria-hidden', String(!open));
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  }
+
+  function openMenu() {
+    setMenuState(true);
+  }
+
+  function closeMenu() {
+    setMenuState(false);
+  }
+
+  toggleButton.addEventListener('click', () => {
+    setMenuState(!menu.classList.contains('open'));
+  });
+
+  closeButton.addEventListener('click', closeMenu);
+  backdrop.addEventListener('click', closeMenu);
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu.classList.contains('open')) {
+      closeMenu();
+    }
+  });
+}
+
 function setActiveNav() {
   const sections = document.querySelectorAll('main section[id]');
   const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
@@ -502,6 +582,8 @@ window.addEventListener('DOMContentLoaded', () => {
   setupFieldZoomScroll();
   addParallaxEffect();
   addMobileShake();
+  setupHeaderScrollBehavior();
+  setupMobileMenu();
   setActiveNav();
   enableSmoothScroll();
   initParticles();

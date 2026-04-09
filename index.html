@@ -51,18 +51,22 @@
           <img src="img/Pittogramma-MM.png" alt="Logo Matteo" class="me-2" style="width: 40px;" loading="lazy">
           Matteo Moscara
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+        <button class="navbar-toggler mobile-menu-toggle" type="button" aria-controls="navbarNav" aria-expanded="false" aria-label="Apri menu">
+          <span class="navbar-toggler-icon">
+            <!-- <i class="fas fa-bars"></i> -->
+          </span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <div class="navbar-collapse justify-content-end" id="navbarNav" aria-hidden="true">
+          <button class="mobile-menu-close d-lg-none" aria-label="Chiudi menu"><i class="fas fa-times"></i></button>
           <ul class="navbar-nav align-items-center">
             <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="#chi-sono">Chi sono</a></li>
             <li class="nav-item"><a class="nav-link" href="#competenze">Competenze</a></li>
             <li class="nav-item"><a class="nav-link" href="#forza">Forza</a></li>
-            <li class="nav-item"><a class="nav-link" href="#progetti">Progetti</a></li>
+            <li class="nav-item"><a class="nav-link" href="#progetti">Idee</a></li>
           </ul>
         </div>
+        <div class="mobile-menu-backdrop d-lg-none"></div>
       </div>
     </nav>
 
@@ -72,17 +76,17 @@
         <div id="particles-js" class="hero-particles"></div>
         <div class="container hero-copy text-center text-white">
           <span class="eyebrow text-uppercase mb-3 d-inline-block">Portfolio personale</span>
-          <h1 class="display-4 fw-bold mb-4 text-white">Ciao, sono Matteo.<br><span class="hero-accent">Do forma</span> alle idee sul web.</h1>
+          <h1 class="display-4 fw-bold mb-4 text-white">Ciao, sono<br><span class="hero-accent">Matteo</span>. <br> É un piacere averTi qui!</h1>
           <p class="lead hero-subtitle mb-5">Progetti con <span class="typed-text"></span><span class="typed-cursor">|</span></p>
           <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-4">
-            <a href="#progetti" class="btn btn-primary btn-lg">Dai un'occhiata ai progetti</a>
+            <a href="#progetti" class="btn btn-primary btn-lg">Dai un'occhiata giù</a>
             <a href="curriculum/curriculum-matteo-moscara-2023.pdf" target="_blank" class="btn btn-outline-light btn-lg disabled" aria-disabled="true">CV in aggiornamento</a>
           </div>
-          <p class="small text-white-75 mb-4 hero-note">Questo è il mio spazio, piacere di conoscerti</p>
+          <p class="small text-white-75 mb-4 hero-note">Questo è il mio spazio, scoprilo</p>
           <div class="hero-highlights d-flex flex-column flex-md-row justify-content-center gap-4">
-            <span>Design pulito</span>
-            <span>Logica strutturale</span>
-            <span>Collaborazione serena</span>
+            <span>Forza</span>
+            <span>Efficacia</span>
+            <span>Dinamicità</span>
           </div>
         </div>
       </section>
@@ -91,15 +95,15 @@
         <div class="container">
           <div class="section-heading text-center mb-5">
             <span class="eyebrow">Chi sono</span>
-            <h2 class="mb-3 cycling-text" data-texts="Cerco il senso logico delle cose, nel codice e nel design.|Mi piace ascoltare e costruire le cose un pezzo alla volta.|Un approccio pragmatico, senza effetti speciali inutili."></h2>
-            <p class="text-white mx-auto" style="max-width: 720px;">Un graphic web designer che apprezza l'ordine. Più che inseguire effetti speciali inutili, costruisce percorsi semplici e funzionali.</p>
+            <h2 class="mb-3 cycling-text" data-texts="Cerco il senso logico delle cose, nel codice, nel design e nella comunicazione.|Mi piace ascoltare e costruire le cose un pezzo alla volta.|Un approccio pragmatico, senza effetti speciali inutili."></h2>
+            <p class="text-white mx-auto" style="max-width: 720px;">Un comunicatore che apprezza l'ordine. Più che inseguire effetti speciali inutili, costruisco percorsi semplici e funzionali.</p>
           </div>
           <div class="row align-items-center g-4">
             <div class="col-lg-6">
               <div class="card feature-card shadow-sm border-0 h-100">
                 <div class="card-body">
                 <h3 class="h4 mb-3 text-white">Concretezza prima di tutto</h3>
-                <p>Mi piace dare uno scopo a ogni elemento. Costruisco spazi digitali ordinati e facili da navigare.</p>
+                <p>Mi piace dare uno scopo a ogni elemento. É importante creare spazi digitali ordinati e facili da navigare.</p>
                   <ul class="list-unstyled mt-4">
                     <li class="mb-2 text-white"><i class="fas fa-check-circle text-primary me-2"></i>Competenza grafica e front-end</li>
                     <li class="mb-2 text-white"><i class="fas fa-check-circle text-primary me-2"></i>Organizzazione del lavoro</li>
@@ -113,19 +117,19 @@
                 <div class="col-sm-6">
                   <div class="info-box p-4 h-100 shadow-sm">
                     <h5 class="mb-3 text-white">Adattabile</h5>
-                    <p class="small">Mi calibro sulle necessità del progetto senza mai perdere di vista la qualità.</p>
+                    <p class="small">Mi calibro sulle necessità del progetto senza mai perdere di vista la qualità e la precisione (la quantità, senza qualità è nulla).</p>
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <div class="info-box p-4 h-100 shadow-sm">
                     <h5 class="mb-3 text-white">Diretto</h5>
-                    <p class="small">Passo dall'idea all'esecuzione cercando sempre la strada più semplice e pulita.</p>
+                    <p class="small">Passo dall'idea all'esecuzione prendendo la strada più professionale e pulita.</p>
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <div class="info-box p-4 h-100 shadow-sm">
                     <h5 class="mb-3 text-white">Logico</h5>
-                    <p class="small">Mi piace sciogliere i nodi tecnici e creativi affrontandoli un passo alla volta.</p>
+                    <p class="small">Mi piace sciogliere i nodi tecnici e creativi affrontandoli anche con delle soluzioni alternative.</p>
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -144,7 +148,7 @@
         <div class="container">
           <div class="section-heading text-center mb-5">
             <span class="eyebrow">Competenze</span>
-            <h2 class="mb-4">Cinque blocchi che raccontano come lavoro.</h2>
+            <h2 class="mb-4">Come lavoro.</h2>
           </div>
           <div class="competence-shell" id="competence-shell" aria-label="Scorri competenze"></div>
           <div class="text-center mt-4">
@@ -204,6 +208,7 @@
       </section> -->
 
       <section id="campo" class="bg-darker campo-scroll-section">
+        <small class="hero-accent text-center p-2 mt-3" style="opacity: .3;">Continua a scorrere</small>
         <div class="campo-sticky-container">
           
           <div class="field-frame" id="field-frame">
@@ -213,7 +218,7 @@
           </div>
 
           <div class="field-content-fixed" id="field-copy">
-            <h2 class="mb-3 text-white display-5 fw-bold">Un campo dove il progetto prende forma.</h2>
+            <h2 class="mb-3 text-white display-5 fw-bold">Un <span class="hero-accent">campo</span> dove il progetto prende forma.</h2>
             <p class="mb-0 text-white lead" style="max-width: 700px; margin: 0 auto;">
               Un ambiente chiaro e armonico che mette in luce il progetto, lasciando che le sezioni successive scivolino dolcemente sopra il campo.
             </p>
@@ -230,7 +235,7 @@
         <div class="row gy-4">
           <div class="col-md-4">
             <div class="card shadow-sm h-100 border-0">
-              <div class="card-body">
+              <div class="card-body rounded">
                 <h5>Metodo</h5>
                 <p class="small">Faccio le cose con ordine. Niente caos, solo un passo dopo l'altro.</p>
               </div>
@@ -238,7 +243,7 @@
           </div>
           <div class="col-md-4">
             <div class="card shadow-sm h-100 border-0">
-              <div class="card-body">
+              <div class="card-body rounded">
                 <h5>Tranquillità</h5>
                 <p class="small">Nei momenti di stress non alzo la voce, ma cerco soluzioni per far procedere il lavoro.</p>
               </div>
@@ -246,7 +251,7 @@
           </div>
           <div class="col-md-4">
             <div class="card shadow-sm h-100 border-0">
-              <div class="card-body">
+              <div class="card-body rounded">
                 <h5>Concretezza</h5>
                 <p class="small">Non propongo effetti speciali se prima non abbiamo sistemato le basi e la logica.</p>
               </div>
@@ -258,14 +263,14 @@
       <section id="progetti" class="bg-secondary text-white py-6 scroll-zoom">
         <div class="container">
           <div class="section-heading text-center text-white mb-5">
-            <span class="eyebrow text-white">Progetti</span>
-            <h2 class="mb-4">Alcuni lavori a cui ho preso parte.</h2>
+            <span class="eyebrow text-white">Idee</span>
+            <h2 class="mb-4">Alcune idee da condividere.</h2>
           </div>
           <div class="row g-4" id="projects-container">
             <div class="col-md-4">
               <div class="card shadow-sm border-0 h-100 text-dark project-card">
                 <img src="img/foto/Rifugio-pomilio.jpg" class="card-img-top" alt="Spazi logici" loading="lazy">
-                <div class="card-body">
+                <div class="card-body p-1 p-md-2">
                   <h5 class="card-title">Spazi logici</h5>
                   <p class="card-text">Costruire un percorso sensato. Progetti pensati per essere usati facilmente.</p>
                 </div>
@@ -274,7 +279,7 @@
             <div class="col-md-4">
               <div class="card shadow-sm border-0 h-100 text-dark project-card">
                 <img src="img/foto/Francavilla-al-mare.jpg" class="card-img-top" alt="Linguaggio visivo chiaro" loading="lazy">
-                <div class="card-body">
+                <div class="card-body p-1 p-md-2">
                   <h5 class="card-title">Linguaggio visivo chiaro</h5>
                   <p class="card-text">Ogni elemento aiuta chi naviga a trovare subito quello che cerca.</p>
                 </div>
@@ -283,7 +288,7 @@
             <div class="col-md-4">
               <div class="card shadow-sm border-0 h-100 text-dark project-card">
                 <img src="img/foto/salto.jpg" class="card-img-top" alt="Gerarchie pulite" loading="lazy">
-                <div class="card-body">
+                <div class="card-body p-1 p-md-2">
                   <h5 class="card-title">Gerarchie pulite</h5>
                   <p class="card-text">Dare la giusta priorità agli elementi, senza sovrapposizioni inutili.</p>
                 </div>
@@ -297,7 +302,7 @@
 
     <footer class="py-4 bg-dark text-light text-center">
       <div class="container">
-        <p class="mb-2 small">© Matteo Moscara · Portfolio personale · Design, codice e un po' di ordine.</p>      </div>
+        <p class="mb-2 small">© Matteo Moscara · Portfolio personale · Comunicazione, design, codice e un po' di ordine.</p>      </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
