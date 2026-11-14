@@ -1,0 +1,310 @@
+/* A compass for the mouse, a small trace for the finger. */
+.interaction-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: layout style;
+}
+
+html.pointer-mouse,
+html.pointer-mouse * {
+  cursor: none !important;
+}
+
+.desktop-pointer,
+.touch-contact,
+.click-echo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  color: var(--effect-color, var(--accent));
+  pointer-events: none;
+}
+
+.desktop-pointer {
+  transform: translate3d(var(--pointer-x, 0px), var(--pointer-y, 0px), 0);
+}
+
+.cursor-ring,
+.cursor-core,
+.touch-ring,
+.touch-core {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #f3f0e855;
+  transition:
+    width 180ms ease,
+    height 180ms ease,
+    border-radius 180ms ease,
+    transform 180ms ease;
+}
+
+.cursor-ring::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 1px var(--paper);
+}
+
+.cursor-core {
+  width: 11px;
+  height: 11px;
+  background: currentColor;
+  clip-path: polygon(
+    50% 0,
+    62% 38%,
+    100% 50%,
+    62% 62%,
+    50% 100%,
+    38% 62%,
+    0 50%,
+    38% 38%
+  );
+}
+
+.desktop-pointer[data-kind="link"] .cursor-ring {
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  background: color-mix(in srgb, currentColor 9%, transparent);
+}
+
+.desktop-pointer[data-kind="link"] .cursor-core {
+  width: 18px;
+  height: 18px;
+  clip-path: polygon(
+    22% 12%,
+    88% 12%,
+    88% 78%,
+    74% 78%,
+    74% 36%,
+    20% 90%,
+    10% 80%,
+    64% 26%,
+    22% 26%
+  );
+}
+
+.desktop-pointer[data-kind="text"] .cursor-ring {
+  width: 20px;
+  height: 30px;
+  border-radius: 6px;
+}
+
+.desktop-pointer[data-kind="text"] .cursor-core {
+  width: 7px;
+  height: 16px;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 9%,
+    61% 9%,
+    61% 91%,
+    100% 91%,
+    100% 100%,
+    0 100%,
+    0 91%,
+    39% 91%,
+    39% 9%,
+    0 9%
+  );
+}
+
+.desktop-pointer.is-pressed .cursor-ring {
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+.touch-contact {
+  transform: translate3d(var(--touch-x, 0px), var(--touch-y, 0px), 0);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.touch-contact.is-visible {
+  opacity: 1;
+}
+
+.touch-core {
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 1px #25241f40;
+}
+
+.touch-ring {
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  box-shadow: 0 0 0 1px #f3f0e855;
+}
+
+.touch-contact.is-visible .touch-ring {
+  animation: touch-breathe 1.4s ease-in-out infinite;
+}
+
+.touch-ring::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 1px var(--paper);
+}
+
+@keyframes touch-breathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(0.88) rotate(-15deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.06) rotate(35deg);
+  }
+}
+
+.click-echo::before,
+.click-echo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: click-ring 580ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.click-echo::before {
+  width: 32px;
+  height: 32px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #f3f0e844;
+}
+
+.click-echo::after {
+  width: 13px;
+  height: 13px;
+  background: currentColor;
+  clip-path: polygon(
+    50% 0,
+    62% 38%,
+    100% 50%,
+    62% 62%,
+    50% 100%,
+    38% 62%,
+    0 50%,
+    38% 38%
+  );
+  animation-name: click-spark;
+}
+
+@keyframes click-ring {
+  from {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(0.45);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.8);
+  }
+}
+
+@keyframes click-spark {
+  from {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) rotate(0) scale(0.5);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(70deg) scale(1.6);
+  }
+}
+
+.selection-note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: max-content;
+  max-width: min(340px, calc(100vw - 32px));
+  padding: 12px 17px;
+  border: 1px solid #f3f0e84d;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 5px 20px #25241f1f;
+  font: 500 14px/1.35 var(--display);
+  letter-spacing: 0;
+  text-align: left;
+  opacity: 0;
+  transform: translate(-50%, 6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.selection-note:empty {
+  display: none;
+}
+.selection-note:not(:empty)::before {
+  content: "✳";
+  color: var(--signal);
+  font-size: 19px;
+  line-height: 1;
+}
+
+.selection-note[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interaction-layer *,
+  .interaction-layer *::before,
+  .interaction-layer *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .click-echo {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  html.pointer-mouse,
+  html.pointer-mouse * {
+    cursor: auto !important;
+  }
+  .desktop-pointer {
+    display: none;
+  }
+  .selection-note {
+    border-color: CanvasText;
+  }
+}
