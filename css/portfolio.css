@@ -20,6 +20,9 @@
   box-sizing: border-box;
 }
 html {
+  background: var(--paper);
+  /* Decorative rotations may bleed; clip without creating a scroll container. */
+  overflow-x: clip;
   scroll-behavior: smooth;
   scroll-padding-top: 110px;
 }
@@ -1462,6 +1465,14 @@ button[hidden] {
     justify-content: space-between;
   }
 }
+/* Keep the rotated note inside phones between 391 and 430px as well. */
+@media (max-width: 430px) {
+  .portrait-note {
+    left: 68%;
+    font-size: 16px;
+    width: 116px;
+  }
+}
 @media (max-width: 390px) {
   .hero-stage {
     min-height: calc(96vw + 137px);
@@ -1473,11 +1484,6 @@ button[hidden] {
   }
   .hero-aside {
     bottom: 10px;
-  }
-  .portrait-note {
-    left: 68%;
-    font-size: 16px;
-    width: 116px;
   }
   .about-portrait {
     max-width: 210px;

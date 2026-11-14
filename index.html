@@ -49,10 +49,12 @@
     <link rel="stylesheet" href="css/experience.css" />
     <link rel="stylesheet" href="css/field-story.css" />
     <link rel="stylesheet" href="css/micro-interactions.css" />
+    <link rel="stylesheet" href="css/idea-lamp.css" />
     <script src="js/portfolio-content.js" defer></script>
     <script src="js/portfolio-copy.js" defer></script>
     <script src="js/portfolio.js" defer></script>
     <script src="js/micro-interactions.js" defer></script>
+    <script src="js/idea-lamp.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#contenuto">Vai al contenuto</a>
@@ -741,11 +743,203 @@
             <span aria-hidden="true">↗</span></a
           >
         </aside>
-        <p class="work-postscript reveal" id="work-thought">
-          Mi interessano le cose che hanno qualcosa da dire.<br /><span
-            >Anche quando lo dicono senza parole.</span
-          >
-        </p>
+        <div class="idea-lab reveal">
+          <p class="work-postscript" id="work-thought">
+            Mi interessano le cose che hanno qualcosa da dire.<br /><span
+              >Anche quando lo dicono senza parole.</span
+            >
+          </p>
+          <div class="idea-lamp" id="idea-lamp" data-state="off" hidden>
+            <span class="eyebrow bulb-eyebrow"
+              >Un’idea. Un po’ di corrente.</span
+            >
+            <button
+              class="idea-switch"
+              type="button"
+              aria-label="Lampadina delle idee"
+              aria-pressed="false"
+              aria-describedby="bulb-hint"
+              data-own-click-feedback
+            >
+              <svg
+                class="bulb-drawing"
+                viewBox="0 0 360 350"
+                fill="none"
+                aria-hidden="true"
+              >
+                <defs>
+                  <radialGradient id="idea-light">
+                    <stop stop-color="#ffd678" stop-opacity=".62" />
+                    <stop
+                      offset=".48"
+                      stop-color="#ffdc91"
+                      stop-opacity=".28"
+                    />
+                    <stop offset="1" stop-color="#ffe4ab" stop-opacity="0" />
+                  </radialGradient>
+                  <linearGradient
+                    id="idea-glass-shade"
+                    x1="110"
+                    y1="160"
+                    x2="255"
+                    y2="285"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#fffdf3" stop-opacity=".9" />
+                    <stop
+                      offset=".46"
+                      stop-color="#e5e0d2"
+                      stop-opacity=".45"
+                    />
+                    <stop offset="1" stop-color="#c8c2b3" stop-opacity=".6" />
+                  </linearGradient>
+                  <radialGradient id="idea-warm-glass" cx=".5" cy=".42" r=".65">
+                    <stop stop-color="#fff8d7" />
+                    <stop offset=".6" stop-color="#ffe09a" />
+                    <stop offset="1" stop-color="#e8b85c" />
+                  </radialGradient>
+                  <path
+                    id="idea-glass-shape"
+                    d="M160 112C160 134 145 143 127 159C100 181 91 208 96 236C101 275 134 299 180 302C226 299 259 275 264 236C269 208 260 181 233 159C215 143 200 134 200 112Z"
+                  />
+                  <clipPath id="idea-glass-left">
+                    <path d="M80 108H180V310H80Z" />
+                  </clipPath>
+                  <clipPath id="idea-glass-right">
+                    <path d="M180 108H280V310H180Z" />
+                  </clipPath>
+                </defs>
+                <ellipse
+                  class="bulb-floor-light"
+                  cx="180"
+                  cy="332"
+                  rx="88"
+                  ry="9"
+                  fill="url(#idea-light)"
+                />
+                <g class="bulb-suspension">
+                  <circle
+                    class="bulb-aura"
+                    cx="180"
+                    cy="212"
+                    r="135"
+                    fill="url(#idea-light)"
+                  />
+                  <path class="bulb-cord" d="M180 0V64" />
+                  <path class="bulb-cord-highlight" d="M182 0V62" />
+                  <g class="bulb-socket">
+                    <path d="M169 64H191L199 76V105L192 116H168L161 105V76Z" />
+                    <path
+                      class="bulb-socket-ridges"
+                      d="M164 81H196M163 89H197M163 97H197M166 105H194"
+                    />
+                    <path class="bulb-socket-mark" d="M176 68H184" />
+                  </g>
+                  <g class="bulb-glass-whole">
+                    <use class="bulb-glass" href="#idea-glass-shape" />
+                    <use
+                      class="bulb-warmth"
+                      href="#idea-glass-shape"
+                      fill="url(#idea-warm-glass)"
+                    />
+                    <path
+                      class="bulb-reflection"
+                      d="M125 179C112 197 109 217 115 234"
+                    />
+                    <path
+                      class="bulb-reflection bulb-reflection-small"
+                      d="M220 170L229 183"
+                    />
+                  </g>
+                  <g
+                    class="bulb-glass-part bulb-glass-left"
+                    clip-path="url(#idea-glass-left)"
+                  >
+                    <use class="bulb-glass" href="#idea-glass-shape" />
+                    <use
+                      class="bulb-warmth"
+                      href="#idea-glass-shape"
+                      fill="url(#idea-warm-glass)"
+                    />
+                    <path
+                      class="bulb-reflection"
+                      d="M125 179C112 197 109 217 115 234"
+                    />
+                  </g>
+                  <g
+                    class="bulb-glass-part bulb-glass-right"
+                    clip-path="url(#idea-glass-right)"
+                  >
+                    <use class="bulb-glass" href="#idea-glass-shape" />
+                    <use
+                      class="bulb-warmth"
+                      href="#idea-glass-shape"
+                      fill="url(#idea-warm-glass)"
+                    />
+                    <path
+                      class="bulb-reflection bulb-reflection-small"
+                      d="M220 170L229 183"
+                    />
+                  </g>
+                  <path class="bulb-stem" d="M171 116V163M189 116V163" />
+                  <path
+                    class="bulb-filament"
+                    d="M161 116L153 194L162 207L171 193L180 207L189 193L198 207L207 194L199 116"
+                  />
+                  <g class="bulb-broken-filament">
+                    <path
+                      d="M161 116L153 194L162 207L170 196M187 201L198 207L207 194L199 116"
+                    />
+                  </g>
+                  <path
+                    class="bulb-crack"
+                    d="M196 153L185 172L200 188L182 210L194 229L188 253"
+                  />
+                  <path class="bulb-stitch" d="M170 196L180 207L189 193" />
+                  <g class="bulb-rays">
+                    <path
+                      d="M78 176L63 167M68 218H49M79 261L63 270M282 176L297 167M292 218H311M281 261L297 270M180 317V327"
+                    />
+                  </g>
+                  <g class="bulb-smoke">
+                    <path
+                      d="M178 185C164 171 194 166 179 151C166 139 190 130 182 116"
+                    />
+                    <path d="M194 180C206 169 187 160 200 148" />
+                  </g>
+                  <g class="bulb-sparks">
+                    <path
+                      d="M140 180L131 170M218 181L229 172M177 222L173 233"
+                    />
+                  </g>
+                </g>
+                <g class="bulb-repair-tool">
+                  <path
+                    d="M0-22C-12-24-18-10-10 0L-32 24A6 6 0 0 0-24 32L-2 10C10 18 24 4 20-8L9 3L1-5L12-17C8-21 4-22 0-22Z"
+                  />
+                  <circle cx="-27" cy="27" r="2" />
+                </g>
+              </svg>
+              <span class="bulb-switch-caption">
+                <span class="bulb-state-dot" aria-hidden="true"></span>
+                <span class="bulb-action">Accendi l’idea</span>
+                <span class="bulb-switch-arrow" aria-hidden="true">↗</span>
+              </span>
+            </button>
+            <span class="sr-only" id="bulb-hint"
+              >Premi per accendere o spegnere la lampadina.</span
+            >
+            <p
+              class="bulb-status"
+              id="bulb-status"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              Le idee hanno bisogno di una scintilla.
+            </p>
+          </div>
+        </div>
       </section>
       <section
         class="playground section-pad"

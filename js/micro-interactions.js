@@ -5,7 +5,8 @@
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   const forcedColors = matchMedia("(forced-colors: active)");
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-  const actionable = 'a[href], button:not(:disabled), summary, [role="button"]';
+  const actionable =
+    'a[href], button:not(:disabled):not([aria-disabled="true"]), summary, [role="button"]:not([aria-disabled="true"])';
   const editable =
     'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
 
@@ -17,17 +18,12 @@
   pointer.setAttribute("aria-hidden", "true");
   pointer.innerHTML =
     '<span class="cursor-ring"></span><span class="cursor-core"></span>';
-  const touch = document.createElement("div");
-  touch.className = "touch-contact";
-  touch.setAttribute("aria-hidden", "true");
-  touch.innerHTML =
-    '<span class="touch-ring"></span><span class="touch-core"></span>';
   const note = document.createElement("div");
   note.className = "selection-note";
   note.setAttribute("role", "status");
   note.setAttribute("aria-live", "polite");
   note.setAttribute("aria-atomic", "true");
-  layer.append(pointer, touch, note);
+  layer.append(pointer, note);
   document.body.append(layer);
 
   // A native dialog sits above every z-index. Keep the effects in its top layer.
@@ -58,7 +54,6 @@
   };
   let pointerFrame;
   let mousePoint;
-  let touchPoint;
   const placePointers = () => {
     pointerFrame = null;
     if (mousePoint && !pointer.hidden) {
@@ -71,11 +66,6 @@
           ? "text"
           : "idle";
       setColor(pointer, hit);
-    }
-    if (touchPoint) {
-      touch.style.setProperty("--touch-x", `${touchPoint.x}px`);
-      touch.style.setProperty("--touch-y", `${touchPoint.y}px`);
-      setColor(touch, document.elementFromPoint(touchPoint.x, touchPoint.y));
     }
   };
   const queuePointers = () => {
@@ -186,55 +176,6 @@
     }
   });
 
-  // Pointer events are cancelled by native scrolling. Passive touch events keep
-  // the contact visible after that cancellation, without taking over the gesture.
-  let touchId = null;
-  const hideTouch = () => {
-    touchId = null;
-    touchPoint = null;
-    touch.classList.remove("is-visible");
-  };
-  document.addEventListener(
-    "touchstart",
-    (event) => {
-      hideMouse();
-      press = null;
-      if (event.touches.length !== 1) {
-        hideTouch();
-        return;
-      }
-      const contact = event.touches[0];
-      touchId = contact.identifier;
-      touchPoint = { x: contact.clientX, y: contact.clientY };
-      syncSurface();
-      // Avoid a visible flight from the previous contact on a fresh tap.
-      placePointers();
-      touch.classList.add("is-visible");
-    },
-    { passive: true },
-  );
-  document.addEventListener(
-    "touchmove",
-    (event) => {
-      if (event.touches.length !== 1 || touchId === null) {
-        hideTouch();
-        return;
-      }
-      const contact = [...event.touches].find(
-        (item) => item.identifier === touchId,
-      );
-      if (!contact) {
-        hideTouch();
-        return;
-      }
-      touchPoint = { x: contact.clientX, y: contact.clientY };
-      queuePointers();
-    },
-    { passive: true },
-  );
-  document.addEventListener("touchend", hideTouch, { passive: true });
-  document.addEventListener("touchcancel", hideTouch, { passive: true });
-
   const responses = new WeakMap();
   const activeResponses = new Set();
   const responseTarget = (event) => {
@@ -275,6 +216,7 @@
       motion.matches ||
       event.detail === 0 ||
       event.pointerType === "touch" ||
+      event.target.closest("[data-own-click-feedback]") ||
       !clickPress ||
       clickPress.moved ||
       performance.now() - clickPress.at > 1200 ||
@@ -441,7 +383,7 @@
     () => {
       clearTimeout(selectionTimer);
       if (note.dataset.visible === "true") hideNote();
-      if (mousePoint || touchPoint) queuePointers();
+      if (mousePoint) queuePointers();
     },
     { passive: true },
   );
@@ -453,7 +395,6 @@
     press = null;
     selectingPointer = false;
     hideMouse();
-    hideTouch();
     clearTimeout(selectionTimer);
     hideNote();
   };

@@ -1,4 +1,4 @@
-/* A compass for the mouse, a small trace for the finger. */
+/* A compass for the mouse; touch keeps native scrolling. */
 .interaction-layer {
   position: fixed;
   inset: 0;
@@ -15,7 +15,6 @@ html.pointer-mouse * {
 }
 
 .desktop-pointer,
-.touch-contact,
 .click-echo {
   position: absolute;
   top: 0;
@@ -31,9 +30,7 @@ html.pointer-mouse * {
 }
 
 .cursor-ring,
-.cursor-core,
-.touch-ring,
-.touch-core {
+.cursor-core {
   position: absolute;
   top: 0;
   left: 0;
@@ -132,60 +129,6 @@ html.pointer-mouse * {
 
 .desktop-pointer.is-pressed .cursor-ring {
   transform: translate(-50%, -50%) scale(0.8);
-}
-
-.touch-contact {
-  transform: translate3d(var(--touch-x, 0px), var(--touch-y, 0px), 0);
-  opacity: 0;
-  transition: opacity 180ms ease;
-}
-
-.touch-contact.is-visible {
-  opacity: 1;
-}
-
-.touch-core {
-  width: 9px;
-  height: 9px;
-  border: 2px solid var(--paper);
-  border-radius: 50%;
-  background: currentColor;
-  box-shadow: 0 0 0 1px #25241f40;
-}
-
-.touch-ring {
-  width: 48px;
-  height: 48px;
-  border: 1.5px solid currentColor;
-  border-radius: 50%;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  box-shadow: 0 0 0 1px #f3f0e855;
-}
-
-.touch-contact.is-visible .touch-ring {
-  animation: touch-breathe 1.4s ease-in-out infinite;
-}
-
-.touch-ring::after {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: currentColor;
-  box-shadow: 0 0 0 1px var(--paper);
-}
-
-@keyframes touch-breathe {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(0.88) rotate(-15deg);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.06) rotate(35deg);
-  }
 }
 
 .click-echo::before,
